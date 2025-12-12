@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="#2563eb"/>
+  
+  <!-- Accessibility Icon -->
+  <g transform="translate(128, 96)">
+    <!-- Head -->
+    <circle cx="128" cy="64" r="48" fill="white"/>
+    
+    <!-- Body/Arms -->
+    <path d="M64 160 L128 128 L192 160 L192 240 L160 320 L128 280 L96 320 L64 240 Z" fill="white"/>
+    
+    <!-- Wheelchair Wheel -->
+    <circle cx="128" cy="288" r="80" stroke="white" stroke-width="16" fill="none"/>
+    <circle cx="128" cy="288" r="16" fill="white"/>
+  </g>
+  
+  <!-- HMK Text -->
+  <text x="256" y="440" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">HMK</text>
+</svg>
+
+

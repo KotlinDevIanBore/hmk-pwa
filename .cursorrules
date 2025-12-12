@@ -1,0 +1,194 @@
+# HMK PWA Development Standards
+
+## Testing Standards
+
+### Unit Tests (Vitest)
+- Write tests for all utility functions and business logic
+- Test files should be colocated with source files: `*.test.ts` or `*.test.tsx`
+- Use descriptive test names that explain the behavior being tested
+- Follow AAA pattern: Arrange, Act, Assert
+- Mock external dependencies appropriately
+- Aim for >80% code coverage for critical paths
+
+Example:
+```typescript
+import { describe, it, expect } from 'vitest';
+import { formatPhoneNumber } from './utils';
+
+describe('formatPhoneNumber', () => {
+  it('should format Kenyan phone numbers correctly', () => {
+    const input = '0712345678';
+    const expected = '+254712345678';
+    expect(formatPhoneNumber(input)).toBe(expected);
+  });
+});
+```
+
+### E2E Tests (Playwright)
+- Write E2E tests for critical user flows
+- Test files located in `/tests/e2e/`
+- Test accessibility in every E2E test using `@axe-core/playwright`
+- Test both desktop and mobile viewports
+- Include keyboard navigation tests
+
+Example:
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('user can register with phone number', async ({ page }) => {
+  await page.goto('/register');
+  await page.fill('[name="phone"]', '0712345678');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL('/verify-otp');
+});
+```
+
+### Accessibility Testing
+- All interactive elements must be keyboard accessible
+- All images must have alt text
+- Forms must have proper labels and error messages
+- Color contrast must meet WCAG AA standards
+- Test with screen readers regularly
+
+## Git Standards
+
+### Commit Messages
+Follow Conventional Commits specification:
+- `feat:` New feature
+- `fix:` Bug fix
+- `docs:` Documentation changes
+- `style:` Code style changes (formatting, etc.)
+- `refactor:` Code refactoring
+- `test:` Adding or updating tests
+- `chore:` Maintenance tasks
+
+Examples:
+```
+feat: add phone authentication
+fix: resolve PIN validation issue
+docs: update API documentation
+test: add E2E tests for registration flow
+```
+
+### Branch Naming
+- `feature/` - New features
+- `fix/` - Bug fixes
+- `chore/` - Maintenance tasks
+- `test/` - Test additions or updates
+
+Examples:
+```
+feature/phone-authentication
+fix/otp-validation-error
+chore/update-dependencies
+test/add-accessibility-tests
+```
+
+### Pull Request Guidelines
+- Create focused PRs that address one concern
+- Include tests for new functionality
+- Update documentation as needed
+- Ensure all tests pass before requesting review
+- Add screenshots for UI changes
+- Reference related issues
+
+### Code Review Checklist
+- [ ] Code follows TypeScript best practices
+- [ ] Tests are included and passing
+- [ ] Accessibility requirements are met
+- [ ] No console.log statements in production code
+- [ ] Error handling is implemented
+- [ ] Database queries are optimized
+- [ ] Security considerations are addressed
+- [ ] Documentation is updated
+
+## TypeScript Standards
+- Use strict mode
+- Avoid `any` type unless absolutely necessary
+- Define interfaces for all data structures
+- Use proper type guards for runtime checks
+- Leverage discriminated unions for state management
+
+## React/Next.js Standards
+- Use Server Components by default
+- Mark Client Components explicitly with 'use client'
+- Implement proper error boundaries
+- Use Suspense for loading states
+- Leverage Next.js App Router conventions
+- Implement proper metadata for SEO
+
+## Accessibility Standards
+- Follow WCAG 2.1 Level AA guidelines
+- Support keyboard navigation throughout
+- Provide skip links for navigation
+- Ensure proper heading hierarchy
+- Test with screen readers (NVDA, JAWS, VoiceOver)
+- Support font size adjustments (3 levels)
+- Implement high contrast mode
+- Use semantic HTML elements
+- Provide clear focus indicators
+
+## Database Standards
+- Use Prisma migrations for schema changes
+- Always include down migrations
+- Index foreign keys and frequently queried columns
+- Use transactions for multi-step operations
+- Implement proper error handling for database operations
+- Sanitize user inputs to prevent SQL injection
+
+## Security Standards
+- Never store passwords in plain text
+- Use bcrypt for password hashing
+- Implement rate limiting for authentication endpoints
+- Validate all user inputs
+- Use HTTPS in production
+- Implement CSRF protection
+- Sanitize database queries
+- Follow OWASP security guidelines
+
+## Performance Standards
+- Optimize images (WebP format, appropriate sizes)
+- Implement proper caching strategies
+- Use dynamic imports for code splitting
+- Monitor bundle size
+- Implement proper loading states
+- Use React.memo() judiciously
+- Optimize database queries (avoid N+1 problems)
+
+## Internationalization
+- All user-facing strings must be in translation files
+- Support English and Swahili
+- Use proper date/time formatting for locales
+- Consider RTL support for future expansion
+- Test both languages thoroughly
+
+## File Organization
+```
+/app - Next.js App Router pages and layouts
+/components - Reusable React components
+  /ui - shadcn/ui components
+  /features - Feature-specific components
+  /layouts - Layout components
+/lib - Utility functions and configurations
+/prisma - Database schema and migrations
+/public - Static assets
+/tests - Test files
+  /e2e - End-to-end tests
+  /unit - Unit tests
+/types - TypeScript type definitions
+/hooks - Custom React hooks
+/contexts - React contexts
+/messages - Translation files (i18n)
+```
+
+## Code Quality
+- Run linter before committing
+- Fix all linter errors and warnings
+- Format code with Prettier (if configured)
+- Keep functions small and focused
+- Use meaningful variable and function names
+- Document complex logic with comments
+- Remove unused code and imports
+- Keep components under 200 lines when possible
+
+

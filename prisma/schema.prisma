@@ -1,0 +1,372 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PWD
+  CAREGIVER
+}
+
+enum DisabilityType {
+  MOBILITY
+  VISUAL
+  HEARING
+  COGNITIVE
+  MULTIPLE
+  OTHER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum IdType {
+  NATIONAL_ID
+  PASSPORT
+  BIRTH_CERTIFICATE
+  NCPWD
+}
+
+enum Relationship {
+  PARENT
+  CHILD
+  SPOUSE
+  SIBLING
+  GUARDIAN
+  OTHER
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentLocationType {
+  RESOURCE_CENTER
+  OUTREACH
+}
+
+enum ServiceType {
+  OPERATIONAL
+  SPIRITUAL
+}
+
+enum ServiceStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  SUPPORT
+}
+
+enum AssessmentStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWED
+  APPROVED
+}
+
+// Users table (PWDs and Caregivers)
+model User {
+  id                String            @id @default(cuid())
+  phoneNumber       String            @unique
+  email             String?
+  phoneVerified     Boolean           @default(false)
+  pin               String?
+  pinHash           String?
+  role              UserRole
+  disabilityType    DisabilityType?
+  firstName         String?
+  lastName          String?
+  dateOfBirth       DateTime?
+  age               Int?
+  gender            Gender?
+  county            String?
+  subCounty         String?
+  ward              String?
+  village           String?
+  idType            IdType?
+  idNumber          String?
+  nationalId        String?           @unique
+  profileComplete   Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  lastLogin         DateTime?
+  isActive          Boolean           @default(true)
+  preferredLanguage String            @default("en")
+  
+  // Relations
+  otpLogs           OtpLog[]
+  beneficiaries     Beneficiary[]     @relation("CaregiverBeneficiaries")
+  caregivers        Beneficiary[]     @relation("PWDBeneficiary")
+  appointments      Appointment[]
+  serviceRequests   ServiceRequest[]
+  assessments       Assessment[]
+  feedback          Feedback[]
+  smsLogs           SmsLog[]
+  
+  @@index([phoneNumber])
+  @@index([role])
+  @@index([isActive])
+}
+
+// OTP Logs for authentication
+model OtpLog {
+  id          String    @id @default(cuid())
+  userId      String
+  phoneNumber String
+  otp         String
+  purpose     String    // 'registration', 'login', 'pin_reset'
+  isUsed      Boolean   @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+  usedAt      DateTime?
+  ipAddress   String?
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([phoneNumber])
+  @@index([expiresAt])
+  @@index([isUsed])
+}
+
+// Beneficiaries (linking caregivers to PWDs)
+model Beneficiary {
+  id           String       @id @default(cuid())
+  caregiverId  String
+  pwdId        String
+  relationship Relationship
+  isVerified   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  
+  caregiver    User         @relation("CaregiverBeneficiaries", fields: [caregiverId], references: [id], onDelete: Cascade)
+  pwd          User         @relation("PWDBeneficiary", fields: [pwdId], references: [id], onDelete: Cascade)
+  
+  @@unique([caregiverId, pwdId])
+  @@index([caregiverId])
+  @@index([pwdId])
+}
+
+// Appointments
+model Appointment {
+  id                String                  @id @default(cuid())
+  userId            String
+  appointmentDate   DateTime
+  appointmentTime   String
+  locationType      AppointmentLocationType
+  location          String?                 // Display name for location
+  outreachLocationId String?                // Foreign key to OutreachLocation
+  purpose           String
+  status            AppointmentStatus       @default(PENDING)
+  serviceFee        Float?                  // Service fee (Resource Center only)
+  ageGroup          String?                 // '<15' or '15+' for Resource Center slots
+  notes             String?
+  reminderSent      Boolean                 @default(false)
+  reminderSentAt    DateTime?
+  cancelledReason   String?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  
+  user              User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  outreachLocation  OutreachLocation?       @relation(fields: [outreachLocationId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([appointmentDate])
+  @@index([status])
+  @@index([locationType])
+  @@index([appointmentDate, appointmentTime, locationType])
+}
+
+// Appointment Configuration (for special dates and slot overrides)
+model AppointmentConfig {
+  id              String   @id @default(cuid())
+  date            DateTime @unique // Specific date for special configuration
+  locationType    AppointmentLocationType
+  slotsAvailable  Int?     // Override total slots (null = use default)
+  slotsUnder15    Int?     // Override slots for <15 years (Resource Center only)
+  slotsOver15     Int?     // Override slots for 15+ years (Resource Center only)
+  isAvailable     Boolean  @default(true) // Can disable specific dates
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([date, locationType])
+}
+
+// Mobility Devices Catalog
+model MobilityDevice {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  category        String   // 'wheelchair', 'crutches', 'walker', 'prosthetics', 'orthotics'
+  imageUrl        String?
+  price           Float?
+  availability    Boolean  @default(true)
+  specifications  Json?    // Flexible field for device-specific specs
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([category])
+  @@index([availability])
+}
+
+// Service Requests (Operational/Spiritual)
+model ServiceRequest {
+  id          String        @id @default(cuid())
+  userId      String
+  serviceType ServiceType
+  title       String
+  description String
+  status      ServiceStatus @default(PENDING)
+  priority    String        @default("medium") // 'low', 'medium', 'high', 'urgent'
+  assignedTo  String?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  completedAt DateTime?
+  
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([serviceType])
+  @@index([status])
+}
+
+// Disability Assessments
+model Assessment {
+  id              String           @id @default(cuid())
+  userId          String
+  status          AssessmentStatus @default(DRAFT)
+  responses       Json             // Store questionnaire responses
+  score           Int?
+  recommendations String?
+  assessedBy      String?          // Admin user ID
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  submittedAt     DateTime?
+  reviewedAt      DateTime?
+  
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([status])
+}
+
+// Outreach Locations
+model OutreachLocation {
+  id          String   @id @default(cuid())
+  name        String
+  county      String
+  subCounty   String?
+  ward        String?
+  description String?
+  address     String?
+  coordinates Json?    // { lat, lng }
+  contactName String?
+  contactPhone String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  appointments Appointment[]
+  
+  @@index([county])
+  @@index([isActive])
+}
+
+// Admin Users
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(SUPPORT)
+  firstName    String
+  lastName     String
+  isActive     Boolean   @default(true)
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+}
+
+// SMS Logs (for tracking simulated SMS)
+model SmsLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  phoneNumber String
+  message     String
+  purpose     String   // 'otp', 'reminder', 'notification'
+  status      String   @default("sent") // 'sent', 'failed', 'delivered'
+  provider    String   @default("simulated")
+  cost        Float?
+  createdAt   DateTime @default(now())
+  deliveredAt DateTime?
+  
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([phoneNumber])
+  @@index([purpose])
+  @@index([createdAt])
+}
+
+// User Feedback
+model Feedback {
+  id         String   @id @default(cuid())
+  userId     String?
+  rating     Int?     // 1-5 stars
+  category   String?  // 'general', 'technical', 'feature_request', 'bug_report'
+  message    String
+  isResolved Boolean  @default(false)
+  response   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([category])
+  @@index([isResolved])
+}
+
+// USSD Callbacks (for future USSD integration)
+model UssdCallback {
+  id           String   @id @default(cuid())
+  sessionId    String   @unique
+  phoneNumber  String
+  serviceCode  String
+  text         String
+  response     String?
+  level        Int      @default(0)
+  isComplete   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@index([sessionId])
+  @@index([phoneNumber])
+  @@index([createdAt])
+}
+
+

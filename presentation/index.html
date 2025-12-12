@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hope Mobility Kenya - PWA Presentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <section class="slide title-slide">
+            <div class="logo-placeholder">
+                <div class="logo-text">HOPE MOBILITY KENYA</div>
+            </div>
+            <h1>Progressive Web Application</h1>
+            <h2>Complete Digital Solution</h2>
+            <p class="subtitle">Empowering Persons with Disabilities through Technology</p>
+        </section>
+
+        <!-- Slide 2: Project Overview -->
+        <section class="slide">
+            <h2>Project Overview</h2>
+            <div class="two-column">
+                <div class="column">
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Phone + PIN + OTP Authentication</li>
+                        <li>Self & Caregiver Registration</li>
+                        <li>Service Request System</li>
+                        <li>Appointment Booking</li>
+                        <li>Mobility Device Catalog</li>
+                        <li>SMS Notifications</li>
+                        <li>Admin Dashboard</li>
+                        <li>Offline Support (PWA)</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Technology Stack</h3>
+                    <ul>
+                        <li><strong>Frontend:</strong> Next.js 15, React 19</li>
+                        <li><strong>Styling:</strong> Tailwind CSS v4</li>
+                        <li><strong>Database:</strong> PostgreSQL + Prisma</li>
+                        <li><strong>PWA:</strong> next-pwa plugin</li>
+                        <li><strong>i18n:</strong> English & Swahili</li>
+                        <li><strong>Testing:</strong> Vitest + Playwright</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Landing Page Mockup -->
+        <section class="slide">
+            <h2>Landing Page</h2>
+            <div class="mockup browser-mockup">
+                <div class="browser-bar">
+                    <div class="browser-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="browser-url">hopemobilitykenya.org</div>
+                </div>
+                <div class="mockup-content landing-page">
+                    <nav class="nav-bar">
+                        <div class="logo-small">HMK</div>
+                        <div class="nav-links">
+                            <a href="#">About</a>
+                            <a href="#">Services</a>
+                            <a href="#">Products</a>
+                            <a href="#">Contact</a>
+                            <button class="btn-primary">Get Started</button>
+                        </div>
+                    </nav>
+                    <div class="hero-section">
+                        <h1>Empowering Mobility</h1>
+                        <h2>Supporting Persons with Disabilities</h2>
+                        <p>Access mobility devices, spiritual support, and professional services</p>
+                        <button class="btn-cta">Register Now</button>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="icon">📱</div>
+                            <h4>Easy Booking</h4>
+                        </div>
+                        <div class="feature-card">
+                            <div class="icon">♿</div>
+                            <h4>Mobility Devices</h4>
+                        </div>
+                        <div class="feature-card">
+                            <div class="icon">🙏</div>
+                            <h4>Spiritual Support</h4>
+                        </div>
+                        <div class="feature-card">
+                            <div class="icon">📍</div>
+                            <h4>Multiple Locations</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Authentication Flow -->
+        <section class="slide">
+            <h2>Authentication System</h2>
+            <div class="mockup phone-mockup">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <div class="auth-screen">
+                            <h3>Welcome Back</h3>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" placeholder="+254 700 000 000" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>PIN</label>
+                                <input type="password" placeholder="••••" readonly>
+                            </div>
+                            <button class="btn-primary full-width">Login</button>
+                            <a href="#" class="link-small">Forgot PIN?</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <div class="auth-screen">
+                            <h3>Enter OTP</h3>
+                            <p class="small-text">Code sent to +254 700 000 000</p>
+                            <div class="otp-inputs">
+                                <input type="text" maxlength="1" value="5" readonly>
+                                <input type="text" maxlength="1" value="2" readonly>
+                                <input type="text" maxlength="1" value="7" readonly>
+                                <input type="text" maxlength="1" value="9" readonly>
+                            </div>
+                            <button class="btn-primary full-width">Verify</button>
+                            <a href="#" class="link-small">Resend Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-description">
+                <p><strong>Security Features:</strong> Phone + PIN + OTP | Bcrypt Hashing | Rate Limiting | Session Management</p>
+            </div>
+        </section>
+
+        <!-- Slide 5: Registration Flow -->
+        <section class="slide">
+            <h2>User Registration</h2>
+            <div class="two-column">
+                <div class="column">
+                    <h3>Self-Registration</h3>
+                    <div class="mockup phone-mockup-small">
+                        <div class="form-preview">
+                            <div class="form-field">Name</div>
+                            <div class="form-field">Age & Gender</div>
+                            <div class="form-field">Phone Number</div>
+                            <div class="form-field">ID Type</div>
+                            <div class="form-field">ID Number</div>
+                            <div class="form-field">Location</div>
+                            <div class="form-field">Create PIN</div>
+                            <button class="btn-small">Register</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <h3>Caregiver Registration</h3>
+                    <div class="mockup phone-mockup-small">
+                        <div class="form-preview">
+                            <div class="form-field">Caregiver Name</div>
+                            <div class="form-field">Caregiver Phone</div>
+                            <div class="checkbox-field">☑ Register for someone else</div>
+                            <div class="form-field highlight">Beneficiary Name</div>
+                            <div class="form-field highlight">Beneficiary Age</div>
+                            <div class="form-field highlight">Relationship</div>
+                            <div class="form-field">Create PIN</div>
+                            <button class="btn-small">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: User Dashboard -->
+        <section class="slide">
+            <h2>User Dashboard</h2>
+            <div class="mockup browser-mockup">
+                <div class="browser-bar">
+                    <div class="browser-dots"><span></span><span></span><span></span></div>
+                    <div class="browser-url">app.hopemobilitykenya.org/dashboard</div>
+                </div>
+                <div class="mockup-content dashboard">
+                    <aside class="sidebar">
+                        <div class="logo-small">HMK</div>
+                        <nav class="sidebar-nav">
+                            <a class="nav-item active">🏠 Dashboard</a>
+                            <a class="nav-item">📋 Services</a>
+                            <a class="nav-item">📅 Appointments</a>
+                            <a class="nav-item">💬 Feedback</a>
+                            <a class="nav-item">👤 Profile</a>
+                            <a class="nav-item">🚪 Logout</a>
+                        </nav>
+                    </aside>
+                    <main class="main-content">
+                        <header class="page-header">
+                            <h2>Welcome, John Doe</h2>
+                            <div class="accessibility-controls">
+                                <button class="icon-btn">🌐</button>
+                                <button class="icon-btn">🔤</button>
+                                <button class="icon-btn">🎨</button>
+                            </div>
+                        </header>
+                        <div class="dashboard-cards">
+                            <div class="card">
+                                <h4>Request Services</h4>
+                                <p>Operational or Spiritual</p>
+                                <button class="btn-secondary">Start</button>
+                            </div>
+                            <div class="card">
+                                <h4>My Appointments</h4>
+                                <p>2 upcoming</p>
+                                <button class="btn-secondary">View</button>
+                            </div>
+                            <div class="card">
+                                <h4>Device Catalog</h4>
+                                <p>Browse devices</p>
+                                <button class="btn-secondary">Explore</button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Services Module -->
+        <section class="slide">
+            <h2>Service Request Flow</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <h4>1. Select Service Type</h4>
+                        <p>Operational or Spiritual</p>
+                    </div>
+                    <div class="arrow">↓</div>
+                </div>
+                <div class="flow-branches">
+                    <div class="branch">
+                        <div class="flow-box highlight-blue">
+                            <h4>Operational</h4>
+                            <ul class="small-list">
+                                <li>Assessment/Fitting</li>
+                                <li>Follow-up</li>
+                                <li>Maintenance</li>
+                            </ul>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-box">
+                            <h4>Questionnaire</h4>
+                            <p>Disability assessment</p>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-box">
+                            <h4>Device Selection</h4>
+                            <p>Multi-select from catalog</p>
+                        </div>
+                    </div>
+                    <div class="branch">
+                        <div class="flow-box highlight-yellow">
+                            <h4>Spiritual</h4>
+                            <ul class="small-list">
+                                <li>Spiritual Assessment</li>
+                                <li>Spiritual Follow-up</li>
+                            </ul>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="flow-box">
+                            <h4>Contact Info</h4>
+                            <p>View counselor details</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="arrow">↓</div>
+                    <div class="flow-box highlight-green">
+                        <h4>Book Appointment</h4>
+                        <p>Select date & location</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Appointment Booking -->
+        <section class="slide">
+            <h2>Appointment Booking System</h2>
+            <div class="two-column">
+                <div class="column">
+                    <h3>Resource Center</h3>
+                    <div class="info-box blue-box">
+                        <h4>Business Rules</h4>
+                        <ul>
+                            <li>📅 Tuesday & Thursday only</li>
+                            <li>🎫 15 total slots</li>
+                            <li>👶 6 slots for <15 years</li>
+                            <li>👨 9 slots for 15+ years</li>
+                            <li>💰 Service fee applies</li>
+                        </ul>
+                    </div>
+                    <div class="mockup calendar-mockup">
+                        <div class="calendar-header">December 2025</div>
+                        <div class="calendar-grid">
+                            <div class="day disabled">Mon</div>
+                            <div class="day available">Tue 10<br><small>8 slots</small></div>
+                            <div class="day disabled">Wed</div>
+                            <div class="day available">Thu 12<br><small>12 slots</small></div>
+                            <div class="day disabled">Fri</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <h3>Outreach Location</h3>
+                    <div class="info-box yellow-box">
+                        <h4>Business Rules</h4>
+                        <ul>
+                            <li>📅 Weekdays only</li>
+                            <li>🎫 Unlimited slots</li>
+                            <li>📍 Multiple locations</li>
+                            <li>💚 No service fee</li>
+                        </ul>
+                    </div>
+                    <div class="mockup location-mockup">
+                        <div class="location-card">
+                            <h4>📍 Nairobi Center</h4>
+                            <p>Available: Mon-Fri</p>
+                            <button class="btn-small">Select</button>
+                        </div>
+                        <div class="location-card">
+                            <h4>📍 Mombasa Office</h4>
+                            <p>Available: Mon-Fri</p>
+                            <button class="btn-small">Select</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Admin Dashboard -->
+        <section class="slide">
+            <h2>Admin Dashboard</h2>
+            <div class="mockup browser-mockup">
+                <div class="browser-bar">
+                    <div class="browser-dots"><span></span><span></span><span></span></div>
+                    <div class="browser-url">admin.hopemobilitykenya.org</div>
+                </div>
+                <div class="mockup-content admin-dashboard">
+                    <aside class="sidebar admin-sidebar">
+                        <div class="logo-small">HMK Admin</div>
+                        <nav class="sidebar-nav">
+                            <a class="nav-item active">📊 Analytics</a>
+                            <a class="nav-item">📅 Appointments</a>
+                            <a class="nav-item">💬 SMS</a>
+                            <a class="nav-item">👥 Users</a>
+                            <a class="nav-item">📦 Products</a>
+                            <a class="nav-item">📄 Reports</a>
+                        </nav>
+                    </aside>
+                    <main class="main-content">
+                        <h2>Analytics Dashboard</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3>1,247</h3>
+                                <p>Total Users</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>856</h3>
+                                <p>Appointments</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>2,341</h3>
+                                <p>SMS Sent</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>4.8★</h3>
+                                <p>Satisfaction</p>
+                            </div>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-placeholder">
+                                <div class="chart-title">New Users Trend</div>
+                                <div class="line-chart"></div>
+                            </div>
+                            <div class="chart-placeholder">
+                                <div class="chart-title">Appointments by Status</div>
+                                <div class="pie-chart"></div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: SMS Management -->
+        <section class="slide">
+            <h2>SMS Management System</h2>
+            <div class="mockup browser-mockup">
+                <div class="browser-bar">
+                    <div class="browser-dots"><span></span><span></span><span></span></div>
+                    <div class="browser-url">admin.hopemobilitykenya.org/sms</div>
+                </div>
+                <div class="mockup-content">
+                    <h3>Send Bulk SMS</h3>
+                    <div class="sms-interface">
+                        <div class="recipients-section">
+                            <h4>Select Recipients</h4>
+                            <div class="filter-group">
+                                <label><input type="checkbox" checked readonly> By Appointment Status</label>
+                                <label><input type="checkbox" readonly> By Device Type</label>
+                                <label><input type="checkbox" readonly> By Service Type</label>
+                            </div>
+                            <div class="recipient-count">
+                                <strong>Recipients: 156</strong>
+                            </div>
+                        </div>
+                        <div class="message-section">
+                            <h4>Template</h4>
+                            <select class="form-select">
+                                <option>Appointment Confirmation</option>
+                                <option>Appointment Reminder</option>
+                                <option>Status Update</option>
+                            </select>
+                            <textarea class="sms-textarea" readonly>Dear {name}, your appointment on {date} at {location} is confirmed. Reply CONFIRM to acknowledge.</textarea>
+                            <div class="char-count">145/160 characters</div>
+                            <button class="btn-primary">Send SMS</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Accessibility Features -->
+        <section class="slide">
+            <h2>Accessibility Features</h2>
+            <div class="accessibility-showcase">
+                <div class="feature-box">
+                    <h3>🔤 Font Size Control</h3>
+                    <div class="example-text">
+                        <p style="font-size: 14px;">Small Text</p>
+                        <p style="font-size: 16px;">Medium Text</p>
+                        <p style="font-size: 20px;">Large Text</p>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <h3>🎨 High Contrast Mode</h3>
+                    <div class="contrast-example">
+                        <div class="normal-mode">Normal</div>
+                        <div class="high-contrast-mode">High Contrast</div>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <h3>⌨️ Keyboard Navigation</h3>
+                    <ul>
+                        <li>Full keyboard support</li>
+                        <li>Skip to content links</li>
+                        <li>Focus indicators</li>
+                        <li>Tab order management</li>
+                    </ul>
+                </div>
+                <div class="feature-box">
+                    <h3>🌐 Multilingual</h3>
+                    <div class="lang-toggle">
+                        <button class="lang-btn active">English</button>
+                        <button class="lang-btn">Kiswahili</button>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <h3>📱 Screen Reader Optimized</h3>
+                    <ul>
+                        <li>ARIA labels</li>
+                        <li>Semantic HTML</li>
+                        <li>Live regions</li>
+                        <li>WCAG 2.1 AA compliant</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: PWA Features -->
+        <section class="slide">
+            <h2>Progressive Web App Features</h2>
+            <div class="pwa-features">
+                <div class="pwa-card">
+                    <div class="pwa-icon">📱</div>
+                    <h3>Installable</h3>
+                    <p>Add to home screen on any device</p>
+                </div>
+                <div class="pwa-card">
+                    <div class="pwa-icon">🔌</div>
+                    <h3>Offline Support</h3>
+                    <p>Works without internet connection</p>
+                </div>
+                <div class="pwa-card">
+                    <div class="pwa-icon">⚡</div>
+                    <h3>Fast Loading</h3>
+                    <p>Optimized for slow 3G networks</p>
+                </div>
+                <div class="pwa-card">
+                    <div class="pwa-icon">🔔</div>
+                    <h3>Push Notifications</h3>
+                    <p>Appointment reminders & updates</p>
+                </div>
+                <div class="pwa-card">
+                    <div class="pwa-icon">🔄</div>
+                    <h3>Background Sync</h3>
+                    <p>Auto-sync when connection restored</p>
+                </div>
+                <div class="pwa-card">
+                    <div class="pwa-icon">💾</div>
+                    <h3>Data Caching</h3>
+                    <p>Reduced data usage</p>
+                </div>
+            </div>
+            <div class="lighthouse-score">
+                <h3>Target Lighthouse Scores</h3>
+                <div class="score-grid">
+                    <div class="score-item">
+                        <div class="score-circle">100</div>
+                        <p>PWA</p>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-circle">90+</div>
+                        <p>Performance</p>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-circle">100</div>
+                        <p>Accessibility</p>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-circle">100</div>
+                        <p>Best Practices</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Technical Architecture -->
+        <section class="slide">
+            <h2>System Architecture</h2>
+            <div class="architecture-diagram">
+                <div class="arch-layer">
+                    <h3>Client Layer</h3>
+                    <div class="arch-boxes">
+                        <div class="arch-box">Next.js 15</div>
+                        <div class="arch-box">React 19</div>
+                        <div class="arch-box">Tailwind CSS</div>
+                        <div class="arch-box">PWA</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">↕️</div>
+                <div class="arch-layer">
+                    <h3>API Layer</h3>
+                    <div class="arch-boxes">
+                        <div class="arch-box">Next.js API Routes</div>
+                        <div class="arch-box">Authentication</div>
+                        <div class="arch-box">SMS Simulator</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">↕️</div>
+                <div class="arch-layer">
+                    <h3>Data Layer</h3>
+                    <div class="arch-boxes">
+                        <div class="arch-box">PostgreSQL</div>
+                        <div class="arch-box">Prisma ORM</div>
+                        <div class="arch-box">IndexedDB (offline)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="scalability-info">
+                <h3>Scalability</h3>
+                <p>✅ Supports 12,000 concurrent users</p>
+                <p>✅ Optimized for low-bandwidth networks</p>
+                <p>✅ Connection pooling & caching</p>
+            </div>
+        </section>
+
+        <!-- Slide 14: Implementation Timeline -->
+        <section class="slide">
+            <h2>Development Timeline</h2>
+            <div class="timeline">
+                <div class="timeline-phase">
+                    <div class="phase-number">1-5</div>
+                    <div class="phase-content">
+                        <h4>Foundation & Core Features</h4>
+                        <p>Setup, Design System, Auth, Registration, Landing Page</p>
+                    </div>
+                </div>
+                <div class="timeline-phase">
+                    <div class="phase-number">6-9</div>
+                    <div class="phase-content">
+                        <h4>User Features</h4>
+                        <p>Services, Appointments, Tracking, USSD</p>
+                    </div>
+                </div>
+                <div class="timeline-phase">
+                    <div class="phase-number">10-14</div>
+                    <div class="phase-content">
+                        <h4>Admin Platform</h4>
+                        <p>Dashboard, Management, SMS, Reports</p>
+                    </div>
+                </div>
+                <div class="timeline-phase">
+                    <div class="phase-number">15-17</div>
+                    <div class="phase-content">
+                        <h4>Optimization & Testing</h4>
+                        <p>PWA, Performance, Comprehensive QA</p>
+                    </div>
+                </div>
+                <div class="timeline-phase">
+                    <div class="phase-number">18-20</div>
+                    <div class="phase-content">
+                        <h4>Launch & Support</h4>
+                        <p>Documentation, Deployment, Post-Launch</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Success Metrics -->
+        <section class="slide">
+            <h2>Success Metrics & Goals</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>♿ Accessibility</h3>
+                    <p class="metric-value">WCAG 2.1 AA</p>
+                    <p>Full compliance</p>
+                </div>
+                <div class="metric-card">
+                    <h3>⚡ Performance</h3>
+                    <p class="metric-value">90+ Score</p>
+                    <p>Lighthouse audit</p>
+                </div>
+                <div class="metric-card">
+                    <h3>📱 PWA</h3>
+                    <p class="metric-value">100 Score</p>
+                    <p>Full PWA features</p>
+                </div>
+                <div class="metric-card">
+                    <h3>🧪 Testing</h3>
+                    <p class="metric-value">80%+</p>
+                    <p>Code coverage</p>
+                </div>
+                <div class="metric-card">
+                    <h3>👥 Capacity</h3>
+                    <p class="metric-value">12,000</p>
+                    <p>Concurrent users</p>
+                </div>
+                <div class="metric-card">
+                    <h3>⏱️ Load Time</h3>
+                    <p class="metric-value">&lt;3s</p>
+                    <p>On slow 3G</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Thank You -->
+        <section class="slide title-slide">
+            <h1>Thank You</h1>
+            <div class="contact-info">
+                <h2>Hope Mobility Kenya</h2>
+                <p>Empowering Lives Through Technology</p>
+                <div class="contact-details">
+                    <p>📧 info@hopemobilitykenya.org</p>
+                    <p>📞 +254 700 000 000</p>
+                    <p>🌐 www.hopemobilitykenya.org</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="controls">
+        <button onclick="previousSlide()">← Previous</button>
+        <span id="slideNumber">1 / 16</span>
+        <button onclick="nextSlide()">Next →</button>
+        <button onclick="window.print()" class="print-btn">📄 Export to PDF</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
