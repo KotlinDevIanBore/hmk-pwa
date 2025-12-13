@@ -75,17 +75,17 @@ test.describe('Landing Page', () => {
       // Check for Get Started button
       const getStartedButton = page.getByRole('link', { name: /get started/i });
       await expect(getStartedButton).toBeVisible();
-      await expect(getStartedButton).toHaveAttribute('href', /\/en\/auth\/register/);
+      await expect(getStartedButton).toHaveAttribute('href', /\/en\/auth\/login/);
 
       // Check for Learn More button
       const learnMoreButton = page.getByRole('button', { name: /learn more/i });
       await expect(learnMoreButton).toBeVisible();
     });
 
-    test('should navigate to registration when Get Started clicked', async ({ page }) => {
+    test('should navigate to login when Get Started clicked', async ({ page }) => {
       const getStartedButton = page.getByRole('link', { name: /get started/i });
       await getStartedButton.click();
-      await expect(page).toHaveURL(/\/en\/auth\/register/);
+      await expect(page).toHaveURL(/\/en\/auth\/login/);
     });
 
     test('should scroll to next section when Learn More clicked', async ({ page }) => {

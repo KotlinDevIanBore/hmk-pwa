@@ -196,7 +196,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             duration: prefersReducedMotion ? 0 : 0.8,
           }}
         >
-          <Link href={`/${locale}/auth/register`}>
+          <Link href={`/${locale}/auth/login`}>
             <Button
               size="lg"
               className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100 hover:scale-105 transition-all shadow-xl focus:outline-none focus:ring-4 focus:ring-white/50"

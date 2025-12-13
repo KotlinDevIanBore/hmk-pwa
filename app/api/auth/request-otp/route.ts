@@ -75,15 +75,16 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    // For registration, check if user already exists
+    // For registration, check if user already exists and completed registration
     if (purpose === 'registration') {
       const existingUser = await prisma.user.findUnique({
         where: { phoneNumber: formattedPhone },
       });
       
-      if (existingUser) {
+      // Only reject if user has completed registration (has a PIN set)
+      if (existingUser && existingUser.pinHash) {
         return NextResponse.json(
-          { error: 'Phone number already registered' },
+          { error: 'Phone number already registered. Please login instead.' },
           { status: 409, headers }
         );
       }
@@ -93,18 +94,39 @@ export async function POST(request: NextRequest) {
     const otp = generateOTP();
     const expiresAt = getOTPExpiryDate();
     
+    // Invalidate any existing unused OTPs for this phone number and purpose
+    await prisma.otpLog.updateMany({
+      where: {
+        phoneNumber: formattedPhone,
+        purpose,
+        isUsed: false,
+      },
+      data: {
+        isUsed: true,
+        usedAt: new Date(),
+      },
+    });
+    
     // Find or create temporary user ID for registration
     let userId: string;
     
     if (purpose === 'registration') {
-      // Create a temporary user record
-      const tempUser = await prisma.user.create({
-        data: {
-          phoneNumber: formattedPhone,
-          role: 'PWD', // Default role, will be updated during registration
-          phoneVerified: false,
-        },
+      // Check if temporary user already exists (incomplete registration)
+      let tempUser = await prisma.user.findUnique({
+        where: { phoneNumber: formattedPhone },
       });
+      
+      // Create temporary user record if doesn't exist
+      if (!tempUser) {
+        tempUser = await prisma.user.create({
+          data: {
+            phoneNumber: formattedPhone,
+            role: 'PWD', // Default role, will be updated during registration
+            phoneVerified: false,
+          },
+        });
+      }
+      
       userId = tempUser.id;
     } else {
       // Get existing user
@@ -152,8 +174,15 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error('Request OTP error:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
     return NextResponse.json(
-      { error: 'Failed to send OTP. Please try again.' },
+      { 
+        error: 'Failed to send OTP. Please try again.',
+        ...(process.env.NODE_ENV === 'development' && { 
+          debug: error instanceof Error ? error.message : String(error)
+        })
+      },
       { status: 500 }
     );
   }

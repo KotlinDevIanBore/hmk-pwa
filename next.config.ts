@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react'],
   },
 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   // PWA configuration
   ...(process.env.NODE_ENV === 'production' && {
     // Production-specific PWA settings

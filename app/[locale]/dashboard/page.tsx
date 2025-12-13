@@ -2,7 +2,7 @@ import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import {
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 export default async function DashboardPage() {
-  const t = useTranslations();
+  const t = await getTranslations();
   const session = await getSession();
 
   if (!session) {

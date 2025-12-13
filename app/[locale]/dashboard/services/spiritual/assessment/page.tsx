@@ -3,7 +3,6 @@
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { BookOpen, Phone, Mail, Calendar } from 'lucide-react';
 

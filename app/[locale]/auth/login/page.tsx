@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,8 @@ import { Phone, Lock, Loader2 } from 'lucide-react';
 export default function LoginPage() {
   const t = useTranslations();
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const { toast } = useToast();
   
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -74,9 +76,9 @@ export default function LoginPage() {
       
       // Redirect based on profile completion status
       if (data.user.profileComplete) {
-        router.push('/dashboard');
+        router.push(`/${locale}/dashboard`);
       } else {
-        router.push('/profile/complete');
+        router.push(`/${locale}/profile/complete`);
       }
       
     } catch (error) {
@@ -158,7 +160,7 @@ export default function LoginPage() {
             
             <div className="flex items-center justify-end">
               <Link
-                href="/auth/reset-pin"
+                href={`/${locale}/auth/reset-pin`}
                 className="text-sm text-primary hover:underline"
                 tabIndex={isLoading ? -1 : 0}
               >
@@ -187,7 +189,7 @@ export default function LoginPage() {
           <div className="text-sm text-center text-gray-600">
             {t('auth.noAccount')}{' '}
             <Link
-              href="/auth/register"
+              href={`/${locale}/auth/register`}
               className="text-primary hover:underline font-medium"
             >
               {t('auth.register')}

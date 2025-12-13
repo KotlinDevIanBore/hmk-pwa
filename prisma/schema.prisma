@@ -49,6 +49,9 @@ enum Relationship {
 enum AppointmentStatus {
   PENDING
   CONFIRMED
+  RESCHEDULED
+  CHECKED_IN
+  CHECKED_OUT
   COMPLETED
   CANCELLED
   NO_SHOW

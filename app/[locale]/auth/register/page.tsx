@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,8 @@ type DisabilityType = 'MOBILITY' | 'VISUAL' | 'HEARING' | 'COGNITIVE' | 'MULTIPL
 export default function RegisterPage() {
   const t = useTranslations();
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const { toast } = useToast();
   
   const [step, setStep] = useState<Step>('phone');
@@ -33,6 +35,7 @@ export default function RegisterPage() {
   const [confirmPin, setConfirmPin] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [developmentOtp, setDevelopmentOtp] = useState<string | null>(null);
 
   const validatePhone = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -118,6 +121,11 @@ export default function RegisterPage() {
         title: t('common.success'),
         description: t('auth.otpSent'),
       });
+      
+      // Store OTP if in development mode
+      if (data.otp) {
+        setDevelopmentOtp(data.otp);
+      }
       
       setStep('otp');
       
@@ -216,7 +224,7 @@ export default function RegisterPage() {
         description: t('auth.registrationSuccess'),
       });
       
-      router.push('/profile/complete');
+      router.push(`/${locale}/profile/complete`);
       
     } catch (error) {
       toast({
@@ -243,6 +251,16 @@ export default function RegisterPage() {
             {step === 'otp' && t('auth.enterOtp')}
             {step === 'details' && t('auth.roleDescription')}
           </CardDescription>
+          {process.env.NODE_ENV === 'development' && step === 'phone' && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-2">
+              <p className="text-xs text-amber-800 text-center">
+                🔧 <strong>Development Mode:</strong> OTP will be displayed on screen after clicking Next, or visit{' '}
+                <Link href={`/${locale}/admin/sms-simulator`} className="underline font-medium" target="_blank">
+                  SMS Simulator
+                </Link>
+              </p>
+            </div>
+          )}
         </CardHeader>
         
         <CardContent>
@@ -292,6 +310,23 @@ export default function RegisterPage() {
 
           {step === 'otp' && (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
+              {developmentOtp && (
+                <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                  <p className="text-xs text-blue-600 font-medium mb-1 text-center">
+                    ⚠️ DEVELOPMENT MODE - Your OTP Code:
+                  </p>
+                  <p className="text-3xl font-mono font-bold text-blue-700 tracking-wider text-center">
+                    {developmentOtp}
+                  </p>
+                  <p className="text-xs text-blue-600 mt-2 text-center">
+                    Or view all OTPs at:{' '}
+                    <Link href={`/${locale}/admin/sms-simulator`} className="underline font-medium" target="_blank">
+                      SMS Simulator
+                    </Link>
+                  </p>
+                </div>
+              )}
+              
               <div className="space-y-2">
                 <Label htmlFor="otp">
                   {t('auth.otp')}
@@ -512,7 +547,7 @@ export default function RegisterPage() {
             <div className="text-sm text-center text-gray-600">
               {t('auth.haveAccount')}{' '}
               <Link
-                href="/auth/login"
+                href={`/${locale}/auth/login`}
                 className="text-primary hover:underline font-medium"
               >
                 {t('auth.login')}

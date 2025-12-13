@@ -54,7 +54,7 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
       opacity: 1,
       transition: {
         duration: prefersReducedMotion ? 0 : 0.3,
-        ease: 'easeOut',
+        ease: 'easeOut' as const,
       },
     },
   };
@@ -110,7 +110,7 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
                 {item.name}
               </a>
             ))}
-            <Link href={`/${locale}/auth/register`} className="ml-4">
+            <Link href={`/${locale}/auth/login`} className="ml-4">
               <Button
                 size="sm"
                 className="bg-blue-600 hover:bg-blue-700 text-white"
@@ -165,7 +165,7 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
               </a>
             ))}
             <Link
-              href={`/${locale}/auth/register`}
+              href={`/${locale}/auth/login`}
               onClick={handleLinkClick}
               className="block px-4 py-2"
             >

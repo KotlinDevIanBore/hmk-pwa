@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,8 @@ type Step = 'phone' | 'otp' | 'newPin';
 export default function ResetPinPage() {
   const t = useTranslations();
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const { toast } = useToast();
   
   const [step, setStep] = useState<Step>('phone');
@@ -26,6 +28,7 @@ export default function ResetPinPage() {
   const [confirmPin, setConfirmPin] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [developmentOtp, setDevelopmentOtp] = useState<string | null>(null);
 
   const validatePhone = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -103,6 +106,11 @@ export default function ResetPinPage() {
         title: t('common.success'),
         description: t('auth.otpSent'),
       });
+      
+      // Store OTP if in development mode
+      if (data.otp) {
+        setDevelopmentOtp(data.otp);
+      }
       
       setStep('otp');
       
@@ -198,7 +206,7 @@ export default function ResetPinPage() {
         description: t('auth.pinResetSuccess'),
       });
       
-      router.push('/auth/login');
+      router.push(`/${locale}/auth/login`);
       
     } catch (error) {
       toast({
@@ -274,6 +282,23 @@ export default function ResetPinPage() {
 
           {step === 'otp' && (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
+              {developmentOtp && (
+                <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                  <p className="text-xs text-blue-600 font-medium mb-1 text-center">
+                    ⚠️ DEVELOPMENT MODE - Your OTP Code:
+                  </p>
+                  <p className="text-3xl font-mono font-bold text-blue-700 tracking-wider text-center">
+                    {developmentOtp}
+                  </p>
+                  <p className="text-xs text-blue-600 mt-2 text-center">
+                    Or view all OTPs at:{' '}
+                    <Link href={`/${locale}/admin/sms-simulator`} className="underline font-medium" target="_blank">
+                      SMS Simulator
+                    </Link>
+                  </p>
+                </div>
+              )}
+              
               <div className="space-y-2">
                 <Label htmlFor="otp">
                   {t('auth.otp')}
@@ -400,7 +425,7 @@ export default function ResetPinPage() {
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-center text-gray-600">
             <Link
-              href="/auth/login"
+              href={`/${locale}/auth/login`}
               className="text-primary hover:underline font-medium"
             >
               {t('common.back')} to {t('auth.login')}

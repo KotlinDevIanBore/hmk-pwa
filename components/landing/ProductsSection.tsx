@@ -173,11 +173,13 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
               layout
               className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group"
             >
-              <div className={`aspect-square ${product.fallbackColor} flex items-center justify-center overflow-hidden`}>
+              <div className={`aspect-square ${product.fallbackColor} flex items-center justify-center overflow-hidden relative`}>
                 <LazyImage
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
                   fallback={
                     <div className="w-full h-full flex items-center justify-center">
                       <Package className="h-16 w-16 text-gray-400" />

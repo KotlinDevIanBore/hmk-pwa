@@ -3,8 +3,6 @@
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -185,9 +183,9 @@ export default function AssessmentPage() {
           description: 'Assessment saved. You can continue later.',
         });
       } else {
-        throw new Error(data.error);
+        throw new Error(data._error);
       }
-    } catch (error) {
+    } catch {
       toast.toast({
         title: t('common.error'),
         description: 'Failed to save assessment',
@@ -218,9 +216,9 @@ export default function AssessmentPage() {
         });
         router.push('/dashboard/services/devices');
       } else {
-        throw new Error(data.error);
+        throw new Error(data._error);
       }
-    } catch (error) {
+    } catch {
       toast.toast({
         title: t('common.error'),
         description: 'Failed to submit assessment',

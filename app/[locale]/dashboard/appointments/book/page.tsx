@@ -83,7 +83,7 @@ export default function BookAppointmentPage() {
       if (!response.ok) throw new Error('Failed to fetch locations');
       const data = await response.json();
       setOutreachLocations(data.locations || []);
-    } catch (error) {
+    } catch {
       toast({
         title: t('common.error'),
         description: 'Failed to load outreach locations',
@@ -124,7 +124,7 @@ export default function BookAppointmentPage() {
       } else {
         setAvailableSlots(data.slots || []);
       }
-    } catch (error) {
+    } catch {
       toast({
         title: t('common.error'),
         description: 'Failed to check availability',
@@ -221,7 +221,7 @@ export default function BookAppointmentPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to book appointment');
+        throw new Error(data._error || 'Failed to book appointment');
       }
 
       setCreatedAppointment(data.appointment);
@@ -234,10 +234,10 @@ export default function BookAppointmentPage() {
         variant: 'success',
       });
 
-    } catch (error: any) {
+    } catch (_error: any) {
       toast({
         title: t('common.error'),
-        description: error.message || 'Failed to book appointment',
+        description: _error.message || 'Failed to book appointment',
         variant: 'error',
       });
     } finally {
@@ -250,7 +250,7 @@ export default function BookAppointmentPage() {
     router.push('/dashboard/appointments');
   };
 
-  const selectedLocation = outreachLocations.find(loc => loc.id === outreachLocationId);
+  const _selectedLocation = outreachLocations.find(loc => loc.id === outreachLocationId);
   const selectedSlot = availableSlots.find(slot => slot.time === time);
 
   return (

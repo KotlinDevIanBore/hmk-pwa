@@ -4,6 +4,7 @@
  */
 
 import { prisma } from './prisma';
+import { AppointmentStatus, Prisma } from '@prisma/client';
 
 export type LocationType = 'RESOURCE_CENTER' | 'OUTREACH';
 
@@ -126,19 +127,14 @@ export async function getBookedSlots(
   const startOfDay = new Date(dateStr + 'T00:00:00.000Z');
   const endOfDay = new Date(dateStr + 'T23:59:59.999Z');
 
-  const where: {
-    appointmentDate: { gte: Date; lte: Date };
-    locationType: LocationType;
-    status: { not: string };
-    outreachLocationId?: string;
-  } = {
+  const where: Prisma.AppointmentWhereInput = {
     appointmentDate: {
       gte: startOfDay,
       lte: endOfDay,
     },
     locationType,
     status: {
-      not: 'CANCELLED',
+      not: 'CANCELLED' as AppointmentStatus,
     },
   };
 

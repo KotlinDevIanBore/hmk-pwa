@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Package, Search, Info, Plus, Check } from 'lucide-react';
+import { Search, Info, Plus } from 'lucide-react';
 
 interface MobilityDevice {
   id: string;
@@ -67,7 +67,7 @@ export default function DeviceCatalogPage() {
         setDevices(data.devices);
         setFilteredDevices(data.devices);
       }
-    } catch (error) {
+    } catch {
       toast.toast({
         title: t('common.error'),
         description: 'Failed to load devices',
@@ -120,7 +120,7 @@ export default function DeviceCatalogPage() {
         setSelectedDevice(data.device);
         setIsDialogOpen(true);
       }
-    } catch (error) {
+    } catch {
       toast.toast({
         title: t('common.error'),
         description: 'Failed to load device details',
@@ -170,9 +170,9 @@ export default function DeviceCatalogPage() {
         });
         router.push('/dashboard/services');
       } else {
-        throw new Error(data.error);
+        throw new Error(data._error);
       }
-    } catch (error) {
+    } catch {
       toast.toast({
         title: t('common.error'),
         description: 'Failed to submit request',

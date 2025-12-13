@@ -147,30 +147,17 @@ export async function PUT(request: NextRequest) {
       },
     });
 
-    // Send SMS notification
-    const userName = user.firstName && user.lastName
-      ? `${user.firstName} ${user.lastName}`
-      : 'User';
-    
+    // Send notifications
     const locationName = updatedAppointment.outreachLocation?.name || 'Resource Center';
-    const formattedDate = newDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    const { sendAppointmentStatusNotification } = await import('@/lib/notifications');
     
-    const smsMessage = `Dear ${userName}, your appointment has been rescheduled. New Date: ${formattedDate}, Time: ${appointmentTime}, Location: ${locationName}. Thank you! - HMK`;
-
-    await prisma.smsLog.create({
-      data: {
-        userId: session.userId,
-        phoneNumber: user.phoneNumber,
-        message: smsMessage,
-        purpose: 'appointment_reschedule',
-        status: 'sent',
-      },
-    });
+    await sendAppointmentStatusNotification(
+      appointmentId,
+      'RESCHEDULED',
+      newDate,
+      appointmentTime,
+      locationName
+    );
 
     return NextResponse.json(
       {

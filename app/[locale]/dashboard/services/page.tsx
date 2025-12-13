@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Heart, Stethoscope, BookOpen, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
 
 export default function ServicesPage() {
   const t = useTranslations();
