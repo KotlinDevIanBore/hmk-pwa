@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { validatePhoneNumber, formatPhoneNumber, hashPin, validatePin } from '@/lib/auth';
 import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
+import { sendViaAfricasTalking } from '@/lib/notifications/providers/africastalking';
 
 const resetPinSchema = z.object({
   phoneNumber: z.string().min(10, 'Phone number is required'),
@@ -19,7 +20,6 @@ const resetPinSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse request body
     const body = await request.json();
     const validation = resetPinSchema.safeParse(body);
     
@@ -130,11 +130,19 @@ export async function POST(request: NextRequest) {
     });
     
     // Log SMS notification
+
+    const message =
+  'HopemobilityKE: Your PIN has been successfully reset. If you did not request this change, please contact Hopemobility support.';
+
+
+    const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+
+   await sendViaAfricasTalking(formattedPhoneNumber,message);
     await prisma.smsLog.create({
       data: {
         userId,
         phoneNumber: formattedPhone,
-        message: 'Your HMK PIN has been successfully reset. If you did not request this change, please contact support immediately.',
+        message: message,
         purpose: 'notification',
         status: 'sent',
       },

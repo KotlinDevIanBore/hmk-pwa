@@ -3,6 +3,7 @@
  * Handles push notifications and SMS notifications
  */
 
+import { sendViaAfricasTalking } from './notifications/providers/africastalking';
 import { prisma } from './prisma';
 
 export interface PushSubscription {
@@ -64,12 +65,10 @@ export async function sendSmsNotification(
       },
     });
 
-    // In production, you would send actual SMS here:
-    // if (process.env.SMS_PROVIDER === 'africastalking') {
-    //   await sendViaAfricasTalking(phoneNumber, message);
-    // }
+    if (process.env.SMS_PROVIDER === 'africastalking') {
+      await sendViaAfricasTalking(phoneNumber, message);
+    }
     
-    console.log(`[SMS Notification] To ${phoneNumber}: ${message}`);
   } catch (error) {
     console.error('Failed to send SMS notification:', error);
     throw error;

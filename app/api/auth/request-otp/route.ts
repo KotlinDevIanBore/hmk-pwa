@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { generateOTP, getOTPExpiryDate, validatePhoneNumber, formatPhoneNumber } from '@/lib/auth';
 import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
+import { sendOTP } from '@/lib/otp-notification';
 
 const requestOTPSchema = z.object({
   phoneNumber: z.string().min(10, 'Phone number is required'),
@@ -147,7 +148,8 @@ export async function POST(request: NextRequest) {
         ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       },
     });
-    
+
+    await sendOTP(userId,phoneNumber,otp,purpose)   
     // Log SMS (simulated)
     await prisma.smsLog.create({
       data: {
