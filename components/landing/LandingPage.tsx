@@ -7,7 +7,8 @@ import { ServicesSection } from './ServicesSection';
 import { ProductsSection } from './ProductsSection';
 import { VisionMissionSection } from './VisionMissionSection';
 import { LandingFooter } from './LandingFooter';
-import { LandingNavigation } from './LandingNavigation';
+import
+ { LandingNavigation } from './LandingNavigation';
 import { AutoScrollTour } from './AutoScrollTour';
 import { SmoothScrollProvider } from './SmoothScrollProvider';
 import { motion, MotionConfig } from 'framer-motion';

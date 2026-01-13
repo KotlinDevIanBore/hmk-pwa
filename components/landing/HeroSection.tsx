@@ -44,6 +44,20 @@ export function HeroSection({ locale }: HeroSectionProps) {
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 text-white overflow-hidden pt-16 md:pt-20"
     >
+{/* Background image */}
+<motion.div
+  className="absolute inset-0 bg-cover bg-top"
+  style={{
+    backgroundImage: "url('/hmk-homepage.jpeg')",
+    y: backgroundY,
+  }}
+/>
+
+{/* Gradient overlay */}
+<div className="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-blue-500/70 to-purple-600/80" />
+
+
+
       {/* Animated background elements with parallax */}
       <motion.div
         className="absolute inset-0 overflow-hidden"
