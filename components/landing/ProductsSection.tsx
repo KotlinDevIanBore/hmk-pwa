@@ -65,7 +65,6 @@ function ProductCard({
   );
 }
 
-// Category filter button component with speech
 function CategoryButton({
   category,
   isActive,

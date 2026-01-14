@@ -231,7 +231,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
           <Button
             size="lg"
             variant="outline"
-            className="text-lg px-8 py-6 border-2 border-white text-white hover:bg-white/10 hover:scale-105 transition-all focus:outline-none focus:ring-4 focus:ring-white/50"
+            className="text-lg px-8 py-6 border-2 border-blue-600 text-white hover:bg-transparent hover:scale-105 transition-all focus:outline-none focus:ring-4 focus:ring-white/50"
             onClick={scrollToNext}
             {...learnMoreSpeech}
           >
