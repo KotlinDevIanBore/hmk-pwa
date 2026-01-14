@@ -229,14 +229,14 @@ export function HeroSection({ locale }: HeroSectionProps) {
             </Button>
           </Link>
           <Button
-            size="lg"
-            variant="outline"
-            className="text-lg px-8 py-6 border-2 border-blue-600 text-white hover:bg-transparent hover:scale-105 transition-all focus:outline-none focus:ring-4 focus:ring-white/50"
-            onClick={scrollToNext}
-            {...learnMoreSpeech}
-          >
-            {t('common.learnMore')}
-          </Button>
+  size="lg"
+  variant="outline"
+  className="text-lg px-8 py-6 border-2 border-blue-600 text-white bg-transparent hover:bg-transparent hover:scale-105 transition-all focus:outline-none focus:ring-4 focus:ring-white/50"
+  onClick={scrollToNext}
+  {...learnMoreSpeech}
+>
+  {t('common.learnMore')}
+</Button>
         </motion.div>
       </motion.div>
 
