@@ -5,12 +5,70 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useSpeechOnInteraction } from '@/hooks/useSpeech';
 import { Button } from '@/components/ui/button';
 import { Accessibility, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LandingNavigationProps {
   locale: string;
+}
+
+// Navigation link component with speech
+function NavLink({
+  href,
+  name,
+  onClick,
+  className,
+}: {
+  href: string;
+  name: string;
+  onClick: () => void;
+  className?: string;
+}) {
+  const navSpeech = useSpeechOnInteraction(`Navigate to ${name} section`, {
+    onFocus: true,
+  });
+
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className={className}
+      {...navSpeech}
+    >
+      {name}
+    </a>
+  );
+}
+
+// Get Started button component with speech
+function GetStartedButton({ 
+  locale, 
+  className, 
+  onClick 
+}: { 
+  locale: string; 
+  className?: string;
+  onClick?: () => void;
+}) {
+  const t = useTranslations();
+  const buttonSpeech = useSpeechOnInteraction(
+    `${t('auth.getStarted') || 'Get Started'} button. Click to get started.`,
+    { onFocus: true }
+  );
+
+  return (
+    <Link href={`/${locale}/auth/login`} className={className} onClick={onClick}>
+      <Button
+        size="sm"
+        className={cn('bg-blue-600 hover:bg-blue-700 text-white', className?.includes('w-full') && 'w-full')}
+        {...buttonSpeech}
+      >
+        {t('auth.getStarted') || 'Get Started'}
+      </Button>
+    </Link>
+  );
 }
 
 export function LandingNavigation({ locale }: LandingNavigationProps) {
@@ -97,27 +155,19 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:gap-1">
             {navigation.map((item) => (
-              <a
+              <NavLink
                 key={item.href}
                 href={item.href}
+                name={item.name}
                 onClick={handleLinkClick}
                 className={cn(
                   'px-4 py-2 rounded-md text-sm font-medium transition-colors',
                   'text-gray-700 hover:text-blue-600 hover:bg-blue-50',
                   'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
                 )}
-              >
-                {item.name}
-              </a>
+              />
             ))}
-            <Link href={`/${locale}/auth/login`} className="ml-4">
-              <Button
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                {t('auth.getStarted') || 'Get Started'}
-              </Button>
-            </Link>
+            <GetStartedButton locale={locale} className="ml-4" />
           </div>
 
           {/* Mobile Menu Button */}
@@ -151,31 +201,21 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
         >
           <div className="py-4 space-y-2">
             {navigation.map((item) => (
-              <a
+              <NavLink
                 key={item.href}
                 href={item.href}
+                name={item.name}
                 onClick={handleLinkClick}
                 className={cn(
                   'block px-4 py-2 rounded-md text-base font-medium',
                   'text-gray-700 hover:text-blue-600 hover:bg-blue-50',
                   'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
                 )}
-              >
-                {item.name}
-              </a>
+              />
             ))}
-            <Link
-              href={`/${locale}/auth/login`}
-              onClick={handleLinkClick}
-              className="block px-4 py-2"
-            >
-              <Button
-                size="sm"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                {t('auth.getStarted') || 'Get Started'}
-              </Button>
-            </Link>
+            <div className="block px-4 py-2">
+              <GetStartedButton locale={locale} className="w-full" onClick={handleLinkClick} />
+            </div>
           </div>
         </motion.div>
       </div>

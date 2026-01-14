@@ -12,11 +12,81 @@ import {
   Stethoscope,
   Home,
   Phone,
+  LucideIcon,
 } from 'lucide-react';
+import { useSpeechOnView, useSpeechOnInteraction } from '@/hooks/useSpeech';
+
+// Service step card component with speech
+function ServiceStepCard({
+  step,
+  title,
+  description,
+  icon: Icon,
+  variants,
+}: {
+  step: number;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  variants: any;
+}) {
+  const stepSpeech = useSpeechOnInteraction(
+    `Step ${step}: ${title}. ${description}`,
+    { onFocus: true }
+  );
+
+  return (
+    <motion.div
+      variants={variants}
+      className="bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2"
+      tabIndex={0}
+      {...stepSpeech}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+          {step}
+        </div>
+        <Icon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+      </div>
+      <h4 className="text-lg font-bold text-gray-900 mb-2">{title}</h4>
+      <p className="text-gray-700 text-sm leading-relaxed">{description}</p>
+    </motion.div>
+  );
+}
+
+// Staff highlight card component with speech
+function StaffHighlightCard({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  const highlightSpeech = useSpeechOnInteraction(
+    `${title}. ${description}`,
+    { onFocus: true }
+  );
+
+  return (
+    <div
+      className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-white shadow-xl"
+      tabIndex={0}
+      {...highlightSpeech}
+    >
+      <h4 className="text-xl font-bold mb-3">{title}</h4>
+      <p className="leading-relaxed opacity-90">{description}</p>
+    </div>
+  );
+}
 
 export function ServicesSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  // Speech announcements
+  const sectionIntro =
+    'Our Services. We follow the WHO 8-step rehabilitation process to ensure comprehensive, person-centered care for every individual we serve.';
+  useSpeechOnView(sectionIntro, isInView, { enabled: true });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -171,13 +241,11 @@ export function ServicesSection() {
           </h3>
           <div className="grid md:grid-cols-3 gap-8">
             {staffHighlights.map((highlight, index) => (
-              <div
+              <StaffHighlightCard
                 key={index}
-                className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-white shadow-xl"
-              >
-                <h4 className="text-xl font-bold mb-3">{highlight.title}</h4>
-                <p className="leading-relaxed opacity-90">{highlight.description}</p>
-              </div>
+                title={highlight.title}
+                description={highlight.description}
+              />
             ))}
           </div>
         </motion.div>

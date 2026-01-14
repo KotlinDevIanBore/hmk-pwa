@@ -6,7 +6,116 @@ import { useRef, useState } from 'react';
 import { LazyImage } from '@/components/performance/LazyImage';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Package, CircleDot, Activity, ShoppingBag } from 'lucide-react';
+import { Package, CircleDot, Activity, ShoppingBag, LucideIcon } from 'lucide-react';
+import { useSpeechOnView, useSpeechOnInteraction } from '@/hooks/useSpeech';
+
+// Product card component with speech
+function ProductCard({
+  product,
+  variants,
+}: {
+  product: {
+    id: number;
+    name: string;
+    category: string;
+    description: string;
+    image: string;
+    fallbackColor: string;
+  };
+  variants: any;
+}) {
+  const productSpeech = useSpeechOnInteraction(
+    `${product.name}. ${product.description}. Click to learn more.`,
+    { onFocus: true }
+  );
+
+  return (
+    <motion.div
+      variants={variants}
+      layout
+      className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group"
+      tabIndex={0}
+      {...productSpeech}
+    >
+      <div className={`aspect-square ${product.fallbackColor} flex items-center justify-center overflow-hidden relative`}>
+        <LazyImage
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          className="object-cover group-hover:scale-110 transition-transform duration-300"
+          fallback={
+            <div className="w-full h-full flex items-center justify-center">
+              <Package className="h-16 w-16 text-gray-400" />
+            </div>
+          }
+        />
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
+        <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+        <Button
+          variant="outline"
+          className="w-full group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all"
+        >
+          Learn More
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Category filter button component with speech
+function CategoryButton({
+  category,
+  isActive,
+  onClick,
+}: {
+  category: { id: string; label: string; icon: LucideIcon };
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const categorySpeech = useSpeechOnInteraction(
+    `${category.label} filter${isActive ? ', currently selected' : ''}. Click to ${isActive ? 'keep' : 'show'} ${category.label}.`,
+    { onFocus: true }
+  );
+
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${
+        isActive
+          ? 'bg-blue-600 text-white shadow-lg scale-105'
+          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+      }`}
+      aria-pressed={isActive}
+      {...categorySpeech}
+    >
+      <category.icon className="h-5 w-5" aria-hidden="true" />
+      {category.label}
+    </button>
+  );
+}
+
+// CTA button component with speech
+function RegisterCTAButton({ locale }: { locale: string }) {
+  const ctaSpeech = useSpeechOnInteraction(
+    'Register to Access Full Catalog. Click to create an account and access our complete product catalog.',
+    { onFocus: true }
+  );
+
+  return (
+    <Link href={`/${locale}/auth/register`}>
+      <Button
+        size="lg"
+        className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700 hover:scale-105 transition-all shadow-xl"
+        {...ctaSpeech}
+      >
+        Register to Access Full Catalog
+      </Button>
+    </Link>
+  );
+}
 
 interface ProductsSectionProps {
   locale: string;
@@ -16,6 +125,11 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [activeCategory, setActiveCategory] = useState('all');
+
+  // Speech announcements
+  const sectionIntro =
+    'Mobility Devices Catalog. Browse our comprehensive range of mobility devices and assistive equipment designed to enhance independence and quality of life.';
+  useSpeechOnView(sectionIntro, isInView, { enabled: true });
 
   const categories = [
     { id: 'all', label: 'All Products', icon: Package },
@@ -143,19 +257,12 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
           className="flex flex-wrap justify-center gap-4 mb-12"
         >
           {categories.map((category) => (
-            <button
+            <CategoryButton
               key={category.id}
+              category={category}
+              isActive={activeCategory === category.id}
               onClick={() => setActiveCategory(category.id)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${
-                activeCategory === category.id
-                  ? 'bg-blue-600 text-white shadow-lg scale-105'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              aria-pressed={activeCategory === category.id}
-            >
-              <category.icon className="h-5 w-5" />
-              {category.label}
-            </button>
+            />
           ))}
         </motion.div>
 
@@ -167,41 +274,11 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
         >
           {filteredProducts.map((product) => (
-            <motion.div
+            <ProductCard
               key={product.id}
+              product={product}
               variants={itemVariants}
-              layout
-              className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group"
-            >
-              <div className={`aspect-square ${product.fallbackColor} flex items-center justify-center overflow-hidden relative`}>
-                <LazyImage
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  fallback={
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Package className="h-16 w-16 text-gray-400" />
-                    </div>
-                  }
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {product.name}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {product.description}
-                </p>
-                <Button
-                  variant="outline"
-                  className="w-full group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all"
-                >
-                  Learn More
-                </Button>
-              </div>
-            </motion.div>
+            />
           ))}
         </motion.div>
 
@@ -212,14 +289,7 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center"
         >
-          <Link href={`/${locale}/auth/register`}>
-            <Button
-              size="lg"
-              className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700 hover:scale-105 transition-all shadow-xl"
-            >
-              Register to Access Full Catalog
-            </Button>
-          </Link>
+          <RegisterCTAButton locale={locale} />
         </motion.div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useSpeechOnView, useSpeechOnInteraction } from '@/hooks/useSpeech';
 import { Accessibility, ChevronDown } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -20,6 +21,14 @@ export function HeroSection({ locale }: HeroSectionProps) {
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
+
+  // Speech announcements for accessibility
+  const heroText = `Hope Mobility Kenya. ${t('common.welcome')} - Empowering Persons with Disabilities. Providing accessible technology, mobility devices, and comprehensive support services across Kenya`;
+  useSpeechOnView(heroText, true, { lang: locale === 'sw' ? 'sw-KE' : 'en-US', enabled: true });
+  
+  const getStartedSpeech = useSpeechOnInteraction(`${t('auth.getStarted')} button. Click to get started`, { onFocus: true });
+  const learnMoreSpeech = useSpeechOnInteraction(`${t('common.learnMore')} button. Click to learn more about our services`, { onFocus: true });
+  const scrollIndicatorSpeech = useSpeechOnInteraction('Scroll to next section', { onFocus: true });
 
   // Parallax transforms (subtle, performance-optimized)
   const backgroundY = useTransform(
@@ -214,6 +223,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             <Button
               size="lg"
               className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100 hover:scale-105 transition-all shadow-xl focus:outline-none focus:ring-4 focus:ring-white/50"
+              {...getStartedSpeech}
             >
               {t('auth.getStarted')}
             </Button>
@@ -223,6 +233,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             variant="outline"
             className="text-lg px-8 py-6 border-2 border-white text-white hover:bg-white/10 hover:scale-105 transition-all focus:outline-none focus:ring-4 focus:ring-white/50"
             onClick={scrollToNext}
+            {...learnMoreSpeech}
           >
             {t('common.learnMore')}
           </Button>
@@ -246,6 +257,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
         }}
         onClick={scrollToNext}
         aria-label="Scroll to next section"
+        {...scrollIndicatorSpeech}
       >
         <ChevronDown className="h-8 w-8" />
       </motion.button>

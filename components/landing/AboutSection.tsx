@@ -3,11 +3,70 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Heart, Users, Target, Award } from 'lucide-react';
+import { Heart, Users, Target, Award, LucideIcon } from 'lucide-react';
+import { useSpeechOnView, useSpeechOnInteraction } from '@/hooks/useSpeech';
+
+// Stat card component with speech
+function StatCard({ 
+  icon: Icon, 
+  label, 
+  value, 
+  variants 
+}: { 
+  icon: LucideIcon; 
+  label: string; 
+  value: string; 
+  variants: any;
+}) {
+  const statSpeech = useSpeechOnInteraction(`${label}: ${value}`, { onFocus: true });
+  
+  return (
+    <motion.div
+      variants={variants}
+      className="text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow"
+      tabIndex={0}
+      {...statSpeech}
+    >
+      <Icon className="h-10 w-10 text-blue-600 mx-auto mb-3" aria-hidden="true" />
+      <div className="text-3xl font-bold text-gray-900 mb-1">
+        {value}
+      </div>
+      <div className="text-sm text-gray-600">{label}</div>
+    </motion.div>
+  );
+}
+
+// Core value card component with speech
+function CoreValueCard({ 
+  title, 
+  description, 
+  borderColor 
+}: { 
+  title: string; 
+  description: string; 
+  borderColor: string;
+}) {
+  const valueSpeech = useSpeechOnInteraction(`${title}. ${description}`, { onFocus: true });
+  
+  return (
+    <div 
+      className={`bg-white p-6 rounded-xl shadow-md border-t-4 ${borderColor}`}
+      tabIndex={0}
+      {...valueSpeech}
+    >
+      <h4 className="text-xl font-bold text-gray-900 mb-3">{title}</h4>
+      <p className="text-gray-700">{description}</p>
+    </div>
+  );
+}
 
 export function AboutSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  // Speech announcements
+  const sectionIntro = 'About Hope Mobility Kenya. We are dedicated to empowering persons with disabilities through comprehensive support services, assistive technology, and community outreach.';
+  useSpeechOnView(sectionIntro, isInView, { enabled: true });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -76,17 +135,13 @@ export function AboutSection() {
             className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
           >
             {stats.map((stat, index) => (
-              <motion.div
+              <StatCard
                 key={index}
+                icon={stat.icon}
+                label={stat.label}
+                value={stat.value}
                 variants={itemVariants}
-                className="text-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow"
-              >
-                <stat.icon className="h-10 w-10 text-blue-600 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-gray-900 mb-1">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
-              </motion.div>
+              />
             ))}
           </motion.div>
 
@@ -96,27 +151,21 @@ export function AboutSection() {
               Our Core Values
             </h3>
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-600">
-                <h4 className="text-xl font-bold text-gray-900 mb-3">Compassion</h4>
-                <p className="text-gray-700">
-                  We approach every individual with empathy, understanding their unique
-                  needs and challenges.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-600">
-                <h4 className="text-xl font-bold text-gray-900 mb-3">Inclusion</h4>
-                <p className="text-gray-700">
-                  We work towards a society where persons with disabilities are fully
-                  integrated and valued.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-600">
-                <h4 className="text-xl font-bold text-gray-900 mb-3">Excellence</h4>
-                <p className="text-gray-700">
-                  We strive for the highest quality in our services, technology, and
-                  support systems.
-                </p>
-              </div>
+              <CoreValueCard
+                title="Compassion"
+                description="We approach every individual with empathy, understanding their unique needs and challenges."
+                borderColor="border-blue-600"
+              />
+              <CoreValueCard
+                title="Inclusion"
+                description="We work towards a society where persons with disabilities are fully integrated and valued."
+                borderColor="border-purple-600"
+              />
+              <CoreValueCard
+                title="Excellence"
+                description="We strive for the highest quality in our services, technology, and support systems."
+                borderColor="border-blue-600"
+              />
             </div>
           </motion.div>
         </motion.div>
