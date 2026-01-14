@@ -6,23 +6,30 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Play, Pause, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useSpeech } from '@/hooks/useSpeech';
 
 interface AutoScrollTourProps {
-  sections: Array<{ id: string; label: string }>;
+  sections: Array<{ id: string; label: string; speechText?: string }>;
+  locale?: string;
 }
 
 /**
  * Auto-scroll tour component that guides users through landing page sections
  * Respects prefers-reduced-motion and provides full keyboard control
  */
-export function AutoScrollTour({ sections }: AutoScrollTourProps) {
+export function AutoScrollTour({ sections, locale = 'en' }: AutoScrollTourProps) {
   const [isActive, setIsActive] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const prefersReducedMotion = useReducedMotion();
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const shouldAutoAdvanceRef = useRef(false);
+  const { speak, isSpeaking, stop } = useSpeech({ 
+    lang: locale === 'sw' ? 'sw-KE' : 'en-US',
+    interrupt: true 
+  });
 
-  const scrollToSection = (index: number) => {
+  const scrollToSection = async (index: number, shouldSpeak: boolean = true, shouldAutoAdvance: boolean = true) => {
     const section = document.getElementById(sections[index].id);
     if (section) {
       section.scrollIntoView({
@@ -30,37 +37,61 @@ export function AutoScrollTour({ sections }: AutoScrollTourProps) {
         block: 'start',
       });
       setCurrentIndex(index);
+
+      // Speak the section intro if speech text is provided
+      if (shouldSpeak && sections[index].speechText) {
+        try {
+          await speak(sections[index].speechText!);
+          
+          // After speech completes, advance to next section if auto-advance is enabled
+          if (shouldAutoAdvance && shouldAutoAdvanceRef.current && isActive && !isPaused) {
+            const nextIndex = (index + 1) % sections.length;
+            // Small delay to ensure smooth transition
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await scrollToSection(nextIndex, true, true);
+          }
+        } catch (error) {
+          console.error('Speech error:', error);
+          // Even on error, continue to next section if auto-advance is enabled
+          if (shouldAutoAdvance && shouldAutoAdvanceRef.current && isActive && !isPaused) {
+            const nextIndex = (index + 1) % sections.length;
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await scrollToSection(nextIndex, true, true);
+          }
+        }
+      } else if (shouldAutoAdvance && shouldAutoAdvanceRef.current && isActive && !isPaused) {
+        // If no speech text, still advance after a delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        const nextIndex = (index + 1) % sections.length;
+        await scrollToSection(nextIndex, true, true);
+      }
     }
   };
 
-  const startTour = () => {
+  const startTour = async () => {
     if (prefersReducedMotion) {
       // For reduced motion, just show the first section
-      scrollToSection(0);
+      await scrollToSection(0, false);
       return;
     }
 
     setIsActive(true);
     setIsPaused(false);
     setCurrentIndex(0);
-    scrollToSection(0);
-
-    // Auto-advance through sections
-    intervalRef.current = setInterval(() => {
-      setCurrentIndex((prev) => {
-        const next = (prev + 1) % sections.length;
-        scrollToSection(next);
-        return next;
-      });
-    }, 5000); // 5 seconds per section
+    shouldAutoAdvanceRef.current = true;
+    
+    // Start with first section and speak it
+    await scrollToSection(0, true);
   };
 
   const stopTour = () => {
     setIsActive(false);
     setIsPaused(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    shouldAutoAdvanceRef.current = false;
+    stop(); // Stop any ongoing speech
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   };
 
@@ -68,47 +99,36 @@ export function AutoScrollTour({ sections }: AutoScrollTourProps) {
     if (isPaused) {
       // Resume
       setIsPaused(false);
-      intervalRef.current = setInterval(() => {
-        setCurrentIndex((prev) => {
-          const next = (prev + 1) % sections.length;
-          scrollToSection(next);
-          return next;
-        });
-      }, 5000);
+      shouldAutoAdvanceRef.current = true;
+      // Continue from current section
+      scrollToSection(currentIndex, true);
     } else {
       // Pause
       setIsPaused(true);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+      shouldAutoAdvanceRef.current = false;
+      stop(); // Stop current speech
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     }
   };
 
-  const goToSection = (index: number) => {
-    scrollToSection(index);
-    if (isActive && !isPaused) {
-      // Reset interval
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      intervalRef.current = setInterval(() => {
-        setCurrentIndex((prev) => {
-          const next = (prev + 1) % sections.length;
-          scrollToSection(next);
-          return next;
-        });
-      }, 5000);
-    }
+  const goToSection = async (index: number) => {
+    stop(); // Stop current speech
+    // Continue auto-advance after this section if tour is active and not paused
+    const willAutoAdvance = isActive && !isPaused;
+    await scrollToSection(index, true, willAutoAdvance);
   };
 
   useEffect(() => {
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      stop(); // Stop speech on unmount
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [stop]);
 
   if (sections.length === 0) return null;
 

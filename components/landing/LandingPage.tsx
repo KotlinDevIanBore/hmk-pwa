@@ -50,11 +50,28 @@ export function LandingPage({ locale }: LandingPageProps) {
 
           {/* Auto-scroll Tour */}
           <AutoScrollTour
+            locale={locale}
             sections={[
-              { id: 'about', label: 'About Us' },
-              { id: 'services', label: 'Services' },
-              { id: 'products', label: 'Products' },
-              { id: 'vision-mission', label: 'Vision & Mission' },
+              { 
+                id: 'about', 
+                label: 'About Us',
+                speechText: 'About Hope Mobility Kenya. We are dedicated to empowering persons with disabilities through comprehensive support services, assistive technology, and community outreach.'
+              },
+              { 
+                id: 'services', 
+                label: 'Services',
+                speechText: 'Our Services. We follow the WHO 8-step rehabilitation process to ensure comprehensive, person-centered care for every individual we serve.'
+              },
+              { 
+                id: 'products', 
+                label: 'Products',
+                speechText: 'Mobility Devices Catalog. Browse our comprehensive range of mobility devices and assistive equipment designed to enhance independence and quality of life.'
+              },
+              { 
+                id: 'vision-mission', 
+                label: 'Vision & Mission',
+                speechText: 'Vision and Mission. Our vision is a Kenya where every person with a disability has equal access to opportunities, lives with dignity, and is fully integrated into society. Our mission is to empower persons with disabilities through comprehensive rehabilitation services, quality mobility devices, accessible technology, spiritual support, and community advocacy.'
+              },
             ]}
           />
         </div>
