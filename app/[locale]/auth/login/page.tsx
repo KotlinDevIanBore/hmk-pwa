@@ -96,6 +96,13 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <div className="flex justify-center mb-4">
+            <img
+              src="/hope-mobility-logo.svg"
+              alt="Hope Mobility Kenya"
+              className="h-16 w-auto object-contain"
+            />
+          </div>
           <CardTitle className="text-2xl font-bold text-center">
             {t('auth.welcomeBack')}
           </CardTitle>

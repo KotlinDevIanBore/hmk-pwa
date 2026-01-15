@@ -99,10 +99,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           {/* Logo and close button */}
           <div className="flex h-16 items-center justify-between border-b px-6">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg">
-                HMK
-              </div>
-              <span className="font-semibold text-lg">HMK PWA</span>
+              <img
+                src="/hope-mobility-logo.svg"
+                alt="Hope Mobility Kenya"
+                className="h-10 w-auto object-contain"
+              />
             </Link>
             <Button
               variant="ghost"

@@ -122,7 +122,21 @@ export function HeroSection({ locale }: HeroSectionProps) {
           className="mb-8"
         >
           {/* Enhanced Logo Animation */}
-        
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              delay: prefersReducedMotion ? 0 : 0.1,
+              duration: prefersReducedMotion ? 0 : 0.6,
+            }}
+            className="mb-6"
+          >
+            <img
+              src="/hope-mobility-logo.svg"
+              alt="Hope Mobility Kenya"
+              className="h-20 md:h-28 w-auto object-contain mx-auto"
+            />
+          </motion.div>
 
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-6"

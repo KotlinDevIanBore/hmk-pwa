@@ -8,7 +8,6 @@ import { AccessibilityControls } from '@/components/AccessibilityControls';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import {
-  Accessibility,
   Menu,
   X,
   Home,
@@ -50,13 +49,11 @@ export function Header() {
               className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md"
               aria-label={t('common.welcome')}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500 text-white">
-                <Accessibility className="h-6 w-6" aria-hidden="true" />
-              </div>
-              <div className="hidden sm:block">
-                <span className="text-xl font-bold text-primary-600">HMK</span>
-                <span className="ml-1 text-sm text-gray-600">PWA</span>
-              </div>
+              <img
+                src="/hope-mobility-logo.svg"
+                alt="Hope Mobility Kenya"
+                className="h-10 w-auto object-contain"
+              />
             </Link>
           </div>
 
