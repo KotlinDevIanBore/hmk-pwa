@@ -122,55 +122,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
           className="mb-8"
         >
           {/* Enhanced Logo Animation */}
-          <motion.div
-            className="inline-flex items-center justify-center mb-6"
-            initial={prefersReducedMotion ? {} : { scale: 0, rotate: -180 }}
-            animate={prefersReducedMotion ? {} : { scale: 1, rotate: 0 }}
-            transition={
-              prefersReducedMotion
-                ? {}
-                : {
-                    type: 'spring',
-                    stiffness: 200,
-                    damping: 15,
-                    duration: 1,
-                  }
-            }
-          >
-            <motion.div
-              className="relative"
-              animate={
-                prefersReducedMotion
-                  ? {}
-                  : {
-                      rotate: [0, 5, -5, 0],
-                      scale: [1, 1.05, 1],
-                    }
-              }
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            >
-              <Accessibility className="h-24 w-24 md:h-32 md:w-32" />
-              {/* Glow effect */}
-              {!prefersReducedMotion && (
-                <motion.div
-                  className="absolute inset-0 bg-white/20 rounded-full blur-xl"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                />
-              )}
-            </motion.div>
-          </motion.div>
+        
 
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-6"

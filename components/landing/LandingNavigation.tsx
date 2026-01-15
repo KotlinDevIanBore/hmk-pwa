@@ -133,24 +133,21 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
       <div className="container mx-auto px-4">
         <div className="flex h-16 md:h-20 items-center justify-between">
           {/* Logo */}
-          <Link
-            href={`/${locale}`}
-            className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
-            aria-label="Hope Mobility Kenya Home"
-          >
-            <motion.div
-              whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
-              whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
-              className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg bg-blue-600 text-white"
-            >
-              <Accessibility className="h-6 w-6 md:h-7 md:w-7" aria-hidden="true" />
-            </motion.div>
-            <div className="hidden sm:block">
-              <span className="text-xl md:text-2xl font-bold text-gray-900">
-                Hope Mobility Kenya
-              </span>
-            </div>
-          </Link>
+          {/* Logo */}
+<Link
+  href={`/${locale}`}
+  className="flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+  aria-label="Hope Mobility Kenya Home"
+>
+  <motion.img
+    src="/hope-mobility-logo.jpg"
+    alt="Hope Mobility Kenya"
+    whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
+    whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
+    className="h-10 md:h-12 w-auto object-contain"
+  />
+</Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:gap-1">
