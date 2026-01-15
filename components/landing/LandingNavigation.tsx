@@ -140,7 +140,7 @@ export function LandingNavigation({ locale }: LandingNavigationProps) {
   aria-label="Hope Mobility Kenya Home"
 >
   <motion.img
-    src="/hope-mobility-logo.jpg"
+    src="/hope-mobility-logo.svg"
     alt="Hope Mobility Kenya"
     whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
     whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
