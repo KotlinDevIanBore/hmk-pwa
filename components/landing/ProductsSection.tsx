@@ -8,11 +8,14 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Package, CircleDot, Activity, ShoppingBag, LucideIcon } from 'lucide-react';
 import { useSpeechOnView, useSpeechOnInteraction } from '@/hooks/useSpeech';
+import { ProductDetails } from './ProductDetails';
+import productDetailsData from '@/data/product-details.json';
 
 // Product card component with speech
 function ProductCard({
   product,
   variants,
+  onLearnMore,
 }: {
   product: {
     id: number;
@@ -23,6 +26,7 @@ function ProductCard({
     fallbackColor: string;
   };
   variants: any;
+  onLearnMore: () => void;
 }) {
   const productSpeech = useSpeechOnInteraction(
     `${product.name}. ${product.description}. Click to learn more.`,
@@ -57,6 +61,7 @@ function ProductCard({
         <Button
           variant="outline"
           className="w-full group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all"
+          onClick={onLearnMore}
         >
           Learn More
         </Button>
@@ -79,16 +84,23 @@ function CategoryButton({
     { onFocus: true }
   );
 
+  const { onClick: speechOnClick, ...restSpeechProps } = categorySpeech;
+
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        if (speechOnClick) {
+          speechOnClick();
+        }
+        onClick();
+      }}
       className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${
         isActive
           ? 'bg-blue-600 text-white shadow-lg scale-105'
           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`}
       aria-pressed={isActive}
-      {...categorySpeech}
+      {...restSpeechProps}
     >
       <category.icon className="h-5 w-5" aria-hidden="true" />
       {category.label}
@@ -124,6 +136,8 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Speech announcements
   const sectionIntro =
@@ -208,6 +222,15 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
     ? products
     : products.filter(p => p.category === activeCategory);
 
+  const handleLearnMore = (productId: number) => {
+    setSelectedProductId(productId);
+    setIsDialogOpen(true);
+  };
+
+  const selectedProduct = selectedProductId 
+    ? (productDetailsData as Record<string, any>)[selectedProductId.toString()] 
+    : null;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -277,6 +300,7 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
               key={product.id}
               product={product}
               variants={itemVariants}
+              onLearnMore={() => handleLearnMore(product.id)}
             />
           ))}
         </motion.div>
@@ -291,6 +315,13 @@ export function ProductsSection({ locale }: ProductsSectionProps) {
           <RegisterCTAButton locale={locale} />
         </motion.div>
       </div>
+
+      {/* Product Details Dialog */}
+      <ProductDetails
+        product={selectedProduct}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      />
     </section>
   );
 }

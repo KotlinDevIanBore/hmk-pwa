@@ -1,0 +1,180 @@
+{
+  "1": {
+    "id": 1,
+    "name": "Manual Wheelchair",
+    "category": "wheelchairs",
+    "description": "Durable and lightweight manual wheelchair for daily use",
+    "image": "/images/products/wheelchair-manual.jpg",
+    "fallbackColor": "bg-blue-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+    "features": [
+      "Lightweight aluminum frame for easy transport",
+      "Adjustable footrests and armrests for personalized comfort",
+      "Pneumatic tires for smooth indoor and outdoor use",
+      "Folding design for convenient storage",
+      "Weight capacity up to 250 lbs"
+    ],
+    "specifications": {
+      "weight": "18 lbs",
+      "width": "24 inches",
+      "depth": "16 inches",
+      "seatHeight": "20 inches"
+    }
+  },
+  "2": {
+    "id": 2,
+    "name": "Electric Wheelchair",
+    "category": "wheelchairs",
+    "description": "Powered wheelchair with joystick control",
+    "image": "/images/products/wheelchair-electric.jpg",
+    "fallbackColor": "bg-purple-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "features": [
+      "Powerful motor for smooth operation",
+      "Joystick control for intuitive navigation",
+      "Long-lasting battery with up to 12 hours of use",
+      "Adjustable seating positions",
+      "LED headlights for visibility"
+    ],
+    "specifications": {
+      "weight": "65 lbs",
+      "width": "26 inches",
+      "depth": "20 inches",
+      "maxSpeed": "5 mph",
+      "batteryLife": "12 hours"
+    }
+  },
+  "3": {
+    "id": 3,
+    "name": "Walking Crutches",
+    "category": "mobility",
+    "description": "Adjustable aluminum crutches with ergonomic grips",
+    "image": "/images/products/crutches.jpg",
+    "fallbackColor": "bg-green-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "features": [
+      "Lightweight aluminum construction",
+      "Height adjustable from 4'8\" to 6'4\"",
+      "Ergonomic handgrips reduce wrist strain",
+      "Non-slip rubber tips for stability",
+      "Easy to adjust and customize"
+    ],
+    "specifications": {
+      "weight": "2.5 lbs per crutch",
+      "heightRange": "4'8\" - 6'4\"",
+      "material": "Aluminum",
+      "tipType": "Rubber non-slip"
+    }
+  },
+  "4": {
+    "id": 4,
+    "name": "Walker Frame",
+    "category": "mobility",
+    "description": "Stable walker frame with wheels",
+    "image": "/images/products/walker.jpg",
+    "fallbackColor": "bg-orange-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.",
+    "features": [
+      "Four-wheel design for enhanced stability",
+      "Height adjustable handles",
+      "Front-wheel brakes for safety",
+      "Folding design for easy storage",
+      "Basket included for carrying items"
+    ],
+    "specifications": {
+      "weight": "12 lbs",
+      "width": "24 inches",
+      "heightRange": "32\" - 38\"",
+      "wheels": "4 wheels with front brakes"
+    }
+  },
+  "5": {
+    "id": 5,
+    "name": "Wheelchair Cushion",
+    "category": "accessories",
+    "description": "Pressure relief cushion for enhanced comfort",
+    "image": "/images/products/cushion.jpg",
+    "fallbackColor": "bg-pink-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "features": [
+      "Memory foam construction for optimal pressure relief",
+      "Waterproof cover for easy cleaning",
+      "Non-slip bottom prevents shifting",
+      "Breathable fabric reduces heat buildup",
+      "Available in multiple sizes"
+    ],
+    "specifications": {
+      "weight": "3 lbs",
+      "dimensions": "18\" x 16\" x 3\"",
+      "material": "Memory foam with waterproof cover",
+      "sizes": "Small, Medium, Large"
+    }
+  },
+  "6": {
+    "id": 6,
+    "name": "Prosthetic Limb",
+    "category": "mobility",
+    "description": "Custom-fitted prosthetic limb",
+    "image": "/images/products/prosthetic.jpg",
+    "fallbackColor": "bg-indigo-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "features": [
+      "Custom-fitted for optimal comfort and function",
+      "Lightweight carbon fiber construction",
+      "Advanced socket design for secure fit",
+      "Natural movement and flexibility",
+      "Professional fitting and adjustment included"
+    ],
+    "specifications": {
+      "weight": "Varies by size",
+      "material": "Carbon fiber and medical-grade materials",
+      "fitting": "Custom fitted by certified prosthetist",
+      "warranty": "2 years"
+    }
+  },
+  "7": {
+    "id": 7,
+    "name": "Orthotic Brace",
+    "category": "accessories",
+    "description": "Supportive orthotic brace for joints",
+    "image": "/images/products/brace.jpg",
+    "fallbackColor": "bg-yellow-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "features": [
+      "Adjustable straps for custom fit",
+      "Breathable neoprene material",
+      "Provides support and stability",
+      "Lightweight and comfortable for all-day wear",
+      "Available for various joint types"
+    ],
+    "specifications": {
+      "weight": "0.5 lbs",
+      "material": "Neoprene with adjustable straps",
+      "sizes": "XS, S, M, L, XL",
+      "types": "Knee, Ankle, Wrist, Elbow"
+    }
+  },
+  "8": {
+    "id": 8,
+    "name": "Mobility Scooter",
+    "category": "wheelchairs",
+    "description": "Compact electric mobility scooter",
+    "image": "/images/products/scooter.jpg",
+    "fallbackColor": "bg-red-100",
+    "fullDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "features": [
+      "Compact and easy to maneuver",
+      "Long-range battery for extended use",
+      "Comfortable swivel seat",
+      "LED headlights and taillights",
+      "Disassembles for easy transport"
+    ],
+    "specifications": {
+      "weight": "85 lbs",
+      "maxSpeed": "4 mph",
+      "batteryLife": "10 miles",
+      "weightCapacity": "300 lbs",
+      "turningRadius": "32 inches"
+    }
+  }
+}
