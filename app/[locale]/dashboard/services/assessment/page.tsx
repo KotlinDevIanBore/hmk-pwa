@@ -214,7 +214,11 @@ export default function AssessmentPage() {
           title: t('common.success'),
           description: 'Assessment submitted successfully',
         });
-        router.push('/dashboard/services/devices');
+        // Get locale from pathname
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        router.push(`/${locale}/dashboard/services/devices`);
       } else {
         throw new Error(data._error);
       }

@@ -166,9 +166,15 @@ export default function DeviceCatalogPage() {
       if (data.success) {
         toast.toast({
           title: t('common.success'),
-          description: t('services.serviceRequested'),
+          description: 'Devices selected. Now book your appointment for fitting.',
         });
-        router.push('/dashboard/services');
+        // Get locale from pathname
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        // Redirect to appointment booking with service request context
+        const deviceIdsParam = Array.from(selectedDevices).join(',');
+        router.push(`/${locale}/dashboard/appointments/book?serviceRequestId=${data.serviceRequest.id}&deviceIds=${deviceIdsParam}&purpose=${encodeURIComponent('Device Fitting')}`);
       } else {
         throw new Error(data._error);
       }
@@ -238,12 +244,51 @@ export default function DeviceCatalogPage() {
         {selectedDevices.size > 0 && (
           <Card className="border-primary-200 bg-primary-50">
             <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm font-medium">
                   {selectedDevices.size} device(s) selected
                 </p>
-                <Button onClick={handleSubmitRequest}>
-                  Submit Request
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      // Get locale from pathname
+                      const pathname = window.location.pathname;
+                      const localeMatch = pathname.match(/^\/(en|sw)/);
+                      const locale = localeMatch ? localeMatch[1] : 'en';
+                      router.push(`/${locale}/dashboard/appointments/book?purpose=Device Fitting`);
+                    }}
+                  >
+                    Skip to Appointment
+                  </Button>
+                  <Button onClick={handleSubmitRequest}>
+                    Submit Request & Book Appointment
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {/* Skip option when no devices selected */}
+        {selectedDevices.size === 0 && (
+          <Card className="border-gray-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600">
+                  Don't need to select devices? You can book an appointment directly.
+                </p>
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    // Get locale from pathname
+                    const pathname = window.location.pathname;
+                    const localeMatch = pathname.match(/^\/(en|sw)/);
+                    const locale = localeMatch ? localeMatch[1] : 'en';
+                    router.push(`/${locale}/dashboard/appointments/book?purpose=General Consultation`);
+                  }}
+                >
+                  Book Appointment
                 </Button>
               </div>
             </CardContent>

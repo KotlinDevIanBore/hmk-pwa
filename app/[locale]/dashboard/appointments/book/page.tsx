@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,6 +41,7 @@ interface OutreachLocation {
 export default function BookAppointmentPage() {
   const t = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
 
   const [locationType, setLocationType] = useState<LocationType | ''>('');
@@ -50,6 +51,9 @@ export default function BookAppointmentPage() {
   const [time, setTime] = useState<string>('');
   const [purpose, setPurpose] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+  const [serviceRequestId, setServiceRequestId] = useState<string | null>(null);
+  const [selectedDeviceIds, setSelectedDeviceIds] = useState<string[]>([]);
+  const [deviceNames, setDeviceNames] = useState<string[]>([]);
   
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -58,6 +62,26 @@ export default function BookAppointmentPage() {
   const [showServiceFeeDialog, setShowServiceFeeDialog] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [createdAppointment, setCreatedAppointment] = useState<any>(null);
+
+  // Load context from URL parameters
+  useEffect(() => {
+    const purposeParam = searchParams.get('purpose');
+    const serviceRequestIdParam = searchParams.get('serviceRequestId');
+    const deviceIdsParam = searchParams.get('deviceIds');
+
+    if (purposeParam) {
+      setPurpose(decodeURIComponent(purposeParam));
+    }
+    if (serviceRequestIdParam) {
+      setServiceRequestId(serviceRequestIdParam);
+    }
+    if (deviceIdsParam) {
+      const ids = deviceIdsParam.split(',').filter(Boolean);
+      setSelectedDeviceIds(ids);
+      // Fetch device names for display
+      fetchDeviceNames(ids);
+    }
+  }, [searchParams]);
 
   // Fetch outreach locations when location type is OUTREACH
   useEffect(() => {
@@ -75,6 +99,30 @@ export default function BookAppointmentPage() {
       setTime('');
     }
   }, [date, locationType, outreachLocationId]);
+
+  const fetchDeviceNames = async (deviceIds: string[]) => {
+    if (deviceIds.length === 0) return;
+    
+    try {
+      const names: string[] = [];
+      for (const id of deviceIds) {
+        const response = await fetch(`/api/devices/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.device) {
+            names.push(data.device.name);
+          }
+        }
+      }
+      setDeviceNames(names);
+      // Update notes with device information
+      if (names.length > 0) {
+        setNotes(`Selected devices: ${names.join(', ')}`);
+      }
+    } catch (error) {
+      console.error('Failed to fetch device names:', error);
+    }
+  };
 
   const fetchOutreachLocations = async () => {
     setLoadingLocations(true);
@@ -247,7 +295,11 @@ export default function BookAppointmentPage() {
 
   const handleConfirmationClose = () => {
     setShowConfirmation(false);
-    router.push('/dashboard/appointments');
+    // Get locale from pathname
+    const pathname = window.location.pathname;
+    const localeMatch = pathname.match(/^\/(en|sw)/);
+    const locale = localeMatch ? localeMatch[1] : 'en';
+    router.push(`/${locale}/dashboard/appointments`);
   };
 
   const _selectedLocation = outreachLocations.find(loc => loc.id === outreachLocationId);
@@ -261,6 +313,12 @@ export default function BookAppointmentPage() {
           <p className="text-muted-foreground mt-2">
             Book an appointment at Resource Center or an Outreach location
           </p>
+          {deviceNames.length > 0 && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm font-medium text-blue-900 mb-1">Selected Devices:</p>
+              <p className="text-sm text-blue-700">{deviceNames.join(', ')}</p>
+            </div>
+          )}
         </div>
 
         <Card>

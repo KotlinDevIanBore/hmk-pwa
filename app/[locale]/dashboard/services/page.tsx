@@ -17,19 +17,34 @@ export default function ServicesPage() {
       id: 'assessment',
       title: 'Assessment/Fitting',
       description: 'Complete disability assessment questionnaire',
-      action: () => router.push('/dashboard/services/assessment'),
+      action: () => {
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        router.push(`/${locale}/dashboard/services/assessment`);
+      },
     },
     {
       id: 'followup',
       title: 'Follow-up',
       description: 'Skip to device selection',
-      action: () => router.push('/dashboard/services/devices'),
+      action: () => {
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        router.push(`/${locale}/dashboard/services/devices`);
+      },
     },
     {
       id: 'maintenance',
       title: 'Maintenance',
       description: 'Skip to device selection',
-      action: () => router.push('/dashboard/services/devices'),
+      action: () => {
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        router.push(`/${locale}/dashboard/services/devices`);
+      },
     },
   ];
 
@@ -38,13 +53,23 @@ export default function ServicesPage() {
       id: 'spiritual-assessment',
       title: 'Spiritual Assessment',
       description: 'Contact information and book appointment',
-      action: () => router.push('/dashboard/services/spiritual/assessment'),
+      action: () => {
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        router.push(`/${locale}/dashboard/services/spiritual/assessment`);
+      },
     },
     {
       id: 'spiritual-followup',
       title: 'Spiritual Follow-up',
       description: 'Contact information and book appointment',
-      action: () => router.push('/dashboard/services/spiritual/followup'),
+      action: () => {
+        const pathname = window.location.pathname;
+        const localeMatch = pathname.match(/^\/(en|sw)/);
+        const locale = localeMatch ? localeMatch[1] : 'en';
+        router.push(`/${locale}/dashboard/services/spiritual/followup`);
+      },
     },
   ];
 

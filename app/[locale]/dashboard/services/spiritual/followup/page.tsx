@@ -17,7 +17,10 @@ export default function SpiritualFollowupPage() {
   };
 
   const handleBookAppointment = () => {
-    router.push('/dashboard/appointments?type=spiritual-followup');
+    const pathname = window.location.pathname;
+    const localeMatch = pathname.match(/^\/(en|sw)/);
+    const locale = localeMatch ? localeMatch[1] : 'en';
+    router.push(`/${locale}/dashboard/appointments/book?purpose=${encodeURIComponent('Spiritual Follow-up')}`);
   };
 
   return (
