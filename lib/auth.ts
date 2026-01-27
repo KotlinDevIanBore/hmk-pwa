@@ -82,6 +82,21 @@ export async function verifyPin(pin: string, hash: string): Promise<boolean> {
 }
 
 /**
+ * Hash a password using bcrypt
+ */
+export async function hashPassword(password: string): Promise<string> {
+  const rounds = parseInt(process.env.BCRYPT_ROUNDS || '10');
+  return bcrypt.hash(password, rounds);
+}
+
+/**
+ * Verify a password against its hash
+ */
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
+
+/**
  * Generate a random OTP code
  */
 export function generateOTP(): string {

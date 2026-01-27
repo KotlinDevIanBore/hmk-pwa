@@ -20,7 +20,49 @@ export async function GET() {
       );
     }
     
-    // Fetch user details
+    // Check if this is an admin user (role will be AdminRole enum value)
+    const isAdminRole = ['SUPER_ADMIN', 'ADMIN', 'MODERATOR', 'SUPPORT'].includes(session.role);
+    
+    if (isAdminRole) {
+      // Fetch admin user details
+      const adminUser = await prisma.adminUser.findUnique({
+        where: { id: session.userId },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          firstName: true,
+          lastName: true,
+          isActive: true,
+          createdAt: true,
+          lastLogin: true,
+        },
+      });
+      
+      if (!adminUser) {
+        return NextResponse.json(
+          { error: 'Admin user not found' },
+          { status: 404 }
+        );
+      }
+      
+      if (!adminUser.isActive) {
+        return NextResponse.json(
+          { error: 'Account is deactivated' },
+          { status: 403 }
+        );
+      }
+      
+      return NextResponse.json(
+        {
+          success: true,
+          user: adminUser,
+        },
+        { status: 200 }
+      );
+    }
+    
+    // Fetch regular user details
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
       select: {

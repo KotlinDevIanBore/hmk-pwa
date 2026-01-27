@@ -18,7 +18,8 @@ export const config = {
     // - api routes
     // - _next (Next.js internals)
     // - static files (files with extensions)
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+    // - /admin (handled separately)
+    '/((?!api|_next/static|_next/image|favicon.ico|admin|.*\\..*).*)',
   ],
 };
 

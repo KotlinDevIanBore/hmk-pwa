@@ -9,7 +9,21 @@ async function main() {
   // Create Admin Users
   console.log('Creating admin users...');
   const passwordHash = await bcrypt.hash('admin123', 10);
+  const seedPasswordHash = await bcrypt.hash('password123', 10);
   
+  const seedUser = await prisma.adminUser.upsert({
+    where: { email: 'seeduser@gmail.com' },
+    update: {},
+    create: {
+      email: 'seeduser@gmail.com',
+      passwordHash: seedPasswordHash,
+      role: 'SUPER_ADMIN',
+      firstName: 'Seed',
+      lastName: 'User',
+      isActive: true,
+    },
+  });
+
   const superAdmin = await prisma.adminUser.upsert({
     where: { email: 'admin@hmk.org' },
     update: {},
@@ -36,7 +50,7 @@ async function main() {
     },
   });
 
-  console.log(`Created admin users: ${superAdmin.email}, ${supportUser.email}`);
+  console.log(`Created admin users: ${seedUser.email}, ${superAdmin.email}, ${supportUser.email}`);
 
   // Create Sample PWD Users
   console.log('Creating sample PWD users...');

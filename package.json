@@ -15,6 +15,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate",
     "setup": "node -e \"console.log('Please run the appropriate setup script for your OS:'); console.log('Windows: .\\\\scripts\\\\setup.ps1 or scripts\\\\quick-start.bat'); console.log('Mac/Linux: ./scripts/setup.sh')\""
   },
