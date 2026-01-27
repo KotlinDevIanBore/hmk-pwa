@@ -15,8 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Search, Info, Plus } from 'lucide-react';
+import { Search, Info, Package } from 'lucide-react';
 
 interface MobilityDevice {
   id: string;
@@ -29,13 +28,12 @@ interface MobilityDevice {
   specifications?: Record<string, any>;
 }
 
-export default function DeviceCatalogPage() {
+export default function DevicesPage() {
   const t = useTranslations();
   const router = useRouter();
   const toast = useToast();
   const [devices, setDevices] = useState<MobilityDevice[]>([]);
   const [filteredDevices, setFilteredDevices] = useState<MobilityDevice[]>([]);
-  const [selectedDevices, setSelectedDevices] = useState<Set<string>>(new Set());
   const [selectedDevice, setSelectedDevice] = useState<MobilityDevice | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,6 +74,9 @@ export default function DeviceCatalogPage() {
           description: data.error || 'Failed to load devices',
           variant: 'error',
         });
+        // Set empty arrays on error
+        setDevices([]);
+        setFilteredDevices([]);
       }
     } catch (error) {
       console.error('Error fetching devices:', error);
@@ -114,18 +115,6 @@ export default function DeviceCatalogPage() {
     setFilteredDevices(filtered);
   };
 
-  const handleDeviceSelect = (deviceId: string) => {
-    setSelectedDevices((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(deviceId)) {
-        newSet.delete(deviceId);
-      } else {
-        newSet.add(deviceId);
-      }
-      return newSet;
-    });
-  };
-
   const handleViewDetails = async (deviceId: string) => {
     try {
       const response = await fetch(`/api/devices/${deviceId}`);
@@ -133,8 +122,10 @@ export default function DeviceCatalogPage() {
       if (data.success) {
         setSelectedDevice(data.device);
         setIsDialogOpen(true);
+      } else {
+        throw new Error('Failed to load device details');
       }
-    } catch {
+    } catch (error) {
       toast.toast({
         title: t('common.error'),
         description: 'Failed to load device details',
@@ -143,68 +134,23 @@ export default function DeviceCatalogPage() {
     }
   };
 
-  const handleAddToRequest = () => {
-    if (selectedDevice) {
-      handleDeviceSelect(selectedDevice.id);
-      setIsDialogOpen(false);
-      toast.toast({
-        title: t('common.success'),
-        description: 'Device added to request',
-      });
-    }
-  };
-
-  const handleSubmitRequest = async () => {
-    if (selectedDevices.size === 0) {
-      toast.toast({
-        title: t('common.error'),
-        description: 'Please select at least one device',
-        variant: 'error',
-      });
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/services/request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          serviceType: 'OPERATIONAL',
-          title: 'Device Request',
-          description: `Requesting ${selectedDevices.size} device(s)`,
-          deviceIds: Array.from(selectedDevices),
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        toast.toast({
-          title: t('common.success'),
-          description: 'Devices selected. Now book your appointment for fitting.',
-        });
-        // Get locale from pathname
-        const pathname = window.location.pathname;
-        const localeMatch = pathname.match(/^\/(en|sw)/);
-        const locale = localeMatch ? localeMatch[1] : 'en';
-        // Redirect to appointment booking with service request context
-        const deviceIdsParam = Array.from(selectedDevices).join(',');
-        router.push(`/${locale}/dashboard/appointments/book?serviceRequestId=${data.serviceRequest.id}&deviceIds=${deviceIdsParam}&purpose=${encodeURIComponent('Device Fitting')}`);
-      } else {
-        throw new Error(data._error);
-      }
-    } catch {
-      toast.toast({
-        title: t('common.error'),
-        description: 'Failed to submit request',
-        variant: 'error',
-      });
-    }
+  const handleRequestService = () => {
+    // Get locale from pathname
+    const pathname = window.location.pathname;
+    const localeMatch = pathname.match(/^\/(en|sw)/);
+    const locale = localeMatch ? localeMatch[1] : 'en';
+    router.push(`/${locale}/dashboard/services`);
   };
 
   if (isLoading) {
     return (
       <DashboardLayout>
-        <div>Loading devices...</div>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-pulse" />
+            <p className="text-gray-500">Loading devices...</p>
+          </div>
+        </div>
       </DashboardLayout>
     );
   }
@@ -218,9 +164,28 @@ export default function DeviceCatalogPage() {
             {t('devices.deviceCatalog')}
           </h1>
           <p className="mt-2 text-gray-600">
-            Select one or more mobility devices for your request
+            Browse our catalog of mobility devices and assistive technology
           </p>
         </div>
+
+        {/* Info Card */}
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-900 mb-1">
+                  Want to request a device?
+                </p>
+                <p className="text-sm text-blue-700">
+                  Browse the catalog below, then visit our Services page to request a device fitting or assessment.
+                </p>
+              </div>
+              <Button onClick={handleRequestService} variant="outline" size="sm">
+                Request Service
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Filters and search */}
         <Card>
@@ -253,72 +218,36 @@ export default function DeviceCatalogPage() {
             </div>
             {searchQuery && (
               <p className="text-sm text-gray-600 mt-2">
-                Found {filteredDevices.length} device{filteredDevices.length !== 1 ? 's' : ''} matching "{searchQuery}"
+                Found {filteredDevices.length} device{filteredDevices.length !== 1 ? 's' : ''}
               </p>
             )}
           </CardContent>
         </Card>
 
-        {/* Selected devices count */}
-        {selectedDevices.size > 0 && (
-          <Card className="border-primary-200 bg-primary-50">
-            <CardContent className="pt-6">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm font-medium">
-                  {selectedDevices.size} device(s) selected
-                </p>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => {
-                      // Get locale from pathname
-                      const pathname = window.location.pathname;
-                      const localeMatch = pathname.match(/^\/(en|sw)/);
-                      const locale = localeMatch ? localeMatch[1] : 'en';
-                      router.push(`/${locale}/dashboard/appointments/book?purpose=Device Fitting`);
-                    }}
-                  >
-                    Skip to Appointment
-                  </Button>
-                  <Button onClick={handleSubmitRequest}>
-                    Submit Request & Book Appointment
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {/* Skip option when no devices selected */}
-        {selectedDevices.size === 0 && (
-          <Card className="border-gray-200">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-600">
-                  Don't need to select devices? You can book an appointment directly.
-                </p>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    // Get locale from pathname
-                    const pathname = window.location.pathname;
-                    const localeMatch = pathname.match(/^\/(en|sw)/);
-                    const locale = localeMatch ? localeMatch[1] : 'en';
-                    router.push(`/${locale}/dashboard/appointments/book?purpose=General Consultation`);
-                  }}
-                >
-                  Book Appointment
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Device grid */}
         {filteredDevices.length === 0 ? (
           <Card>
             <CardContent className="pt-6">
-              <p className="text-center text-gray-500">No devices found</p>
+              <div className="text-center py-8">
+                <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">
+                  {searchQuery || categoryFilter !== 'all'
+                    ? 'No devices found matching your search criteria'
+                    : 'No devices available'}
+                </p>
+                {(searchQuery || categoryFilter !== 'all') && (
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setCategoryFilter('all');
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+              </div>
             </CardContent>
           </Card>
         ) : (
@@ -326,27 +255,16 @@ export default function DeviceCatalogPage() {
             {filteredDevices.map((device) => (
               <Card
                 key={device.id}
-                className={`transition-shadow hover:shadow-md ${
-                  selectedDevices.has(device.id) ? 'ring-2 ring-primary' : ''
-                }`}
+                className="transition-shadow hover:shadow-md"
               >
                 <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{device.name}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {device.category}
-                      </CardDescription>
-                    </div>
-                    <Checkbox
-                      checked={selectedDevices.has(device.id)}
-                      onCheckedChange={() => handleDeviceSelect(device.id)}
-                      aria-label={`Select ${device.name}`}
-                    />
-                  </div>
+                  <CardTitle className="text-lg">{device.name}</CardTitle>
+                  <CardDescription className="mt-1">
+                    {device.category}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-600 line-clamp-2">
+                  <p className="text-sm text-gray-600 line-clamp-3">
                     {device.description}
                   </p>
                   <div className="flex items-center justify-between">
@@ -422,16 +340,13 @@ export default function DeviceCatalogPage() {
                     </ul>
                   </div>
                 )}
-                <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-2 pt-4 border-t">
                   <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                     {t('common.close')}
                   </Button>
-                  {selectedDevice.availability && (
-                    <Button onClick={handleAddToRequest}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add to Request
-                    </Button>
-                  )}
+                  <Button onClick={handleRequestService}>
+                    Request This Device
+                  </Button>
                 </div>
               </div>
             )}
@@ -441,4 +356,3 @@ export default function DeviceCatalogPage() {
     </DashboardLayout>
   );
 }
-
