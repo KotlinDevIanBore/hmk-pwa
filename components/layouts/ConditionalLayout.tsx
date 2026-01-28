@@ -11,7 +11,10 @@ export function ConditionalLayout({ children }: { children: ReactNode }) {
   // Don't show Header/Footer on landing page
   const isLandingPage = pathname === '/' || pathname.match(/^\/[a-z]{2}$/);
   
-  if (isLandingPage) {
+  // Don't show Header/Footer on dashboard or admin pages (they have their own layouts)
+  const isDashboardPage = pathname.includes('/dashboard') || pathname.includes('/admin');
+  
+  if (isLandingPage || isDashboardPage) {
     return <>{children}</>;
   }
   
