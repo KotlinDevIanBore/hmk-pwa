@@ -177,6 +177,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           >
             <Menu className="h-6 w-6" />
           </Button>
+          {/* Mobile Logo */}
+          <Link href="/dashboard" className="lg:hidden flex items-center">
+            <img
+              src="/hope-mobility-logo.svg"
+              alt="Hope Mobility Kenya"
+              className="h-8 w-auto object-contain"
+            />
+          </Link>
           <div className="flex flex-1 items-center justify-between">
             <h1 className="text-lg font-semibold lg:text-xl">
               {navigation.find((item) => isActive(item.href))?.name || t('navigation.home')}

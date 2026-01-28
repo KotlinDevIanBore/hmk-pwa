@@ -53,12 +53,14 @@ const defaultTemplates: SMSTemplate[] = [
 
 export default function SMSTemplatesPage() {
   const { toast } = useToast();
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('none');
   const [customMessage, setCustomMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  const selectedTemplateData = defaultTemplates.find(t => t.id === selectedTemplate);
+  const selectedTemplateData = selectedTemplate !== 'none' 
+    ? defaultTemplates.find(t => t.id === selectedTemplate)
+    : undefined;
 
   const handleSendSMS = async () => {
     if (!phoneNumber || !phoneNumber.match(/^\+?254[17]\d{8}$/)) {
@@ -70,7 +72,7 @@ export default function SMSTemplatesPage() {
       return;
     }
 
-    if (!selectedTemplate && !customMessage) {
+    if (selectedTemplate === 'none' && !customMessage) {
       toast({
         title: 'Error',
         description: 'Please select a template or enter a custom message',
@@ -81,7 +83,7 @@ export default function SMSTemplatesPage() {
 
     setIsSending(true);
     try {
-      const message = selectedTemplate && selectedTemplateData
+      const message = selectedTemplate !== 'none' && selectedTemplateData
         ? selectedTemplateData.message
         : customMessage;
 
@@ -91,7 +93,7 @@ export default function SMSTemplatesPage() {
         body: JSON.stringify({
           phoneNumber,
           message,
-          purpose: selectedTemplate || 'custom',
+          purpose: selectedTemplate !== 'none' ? selectedTemplate : 'custom',
         }),
       });
 
@@ -103,7 +105,7 @@ export default function SMSTemplatesPage() {
         });
         setPhoneNumber('');
         setCustomMessage('');
-        setSelectedTemplate('');
+        setSelectedTemplate('none');
       } else {
         throw new Error(data.error);
       }
@@ -198,13 +200,15 @@ export default function SMSTemplatesPage() {
                 <Label htmlFor="template">Template</Label>
                 <Select value={selectedTemplate} onValueChange={(value) => {
                   setSelectedTemplate(value);
-                  setCustomMessage('');
+                  if (value !== 'none') {
+                    setCustomMessage('');
+                  }
                 }}>
                   <SelectTrigger id="template">
                     <SelectValue placeholder="Select a template" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None (Custom Message)</SelectItem>
+                    <SelectItem value="none">None (Custom Message)</SelectItem>
                     {defaultTemplates.map((template) => (
                       <SelectItem key={template.id} value={template.id}>
                         {template.name}
@@ -232,7 +236,7 @@ export default function SMSTemplatesPage() {
                   value={customMessage}
                   onChange={(e) => {
                     setCustomMessage(e.target.value);
-                    if (e.target.value) setSelectedTemplate('');
+                    if (e.target.value) setSelectedTemplate('none');
                   }}
                   rows={6}
                 />
@@ -243,7 +247,7 @@ export default function SMSTemplatesPage() {
 
               <Button
                 onClick={handleSendSMS}
-                disabled={isSending || (!phoneNumber || (!selectedTemplate && !customMessage))}
+                disabled={isSending || (!phoneNumber || (selectedTemplate === 'none' && !customMessage))}
                 className="w-full"
               >
                 {isSending ? (
