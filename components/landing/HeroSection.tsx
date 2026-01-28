@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useSpeechOnView, useSpeechOnInteraction } from '@/hooks/useSpeech';
 import { Accessibility, ChevronDown } from 'lucide-react';
+import { TypewriterText } from '@/components/ui/TypewriterText';
 
 interface HeroSectionProps {
   locale: string;
@@ -159,7 +160,17 @@ export function HeroSection({ locale }: HeroSectionProps) {
               duration: prefersReducedMotion ? 0 : 0.8,
             }}
           >
-            {t('common.welcome')} - Empowering Persons with Disabilities
+            {prefersReducedMotion ? (
+              `${t('common.welcome')} - Empowering Persons with Disabilities`
+            ) : (
+              <TypewriterText
+                text={`${t('common.welcome')} - Empowering Persons with Disabilities`}
+                speed={30}
+                delay={800}
+                showCursor={true}
+                className="inline-block"
+              />
+            )}
           </motion.p>
 
           <motion.p
